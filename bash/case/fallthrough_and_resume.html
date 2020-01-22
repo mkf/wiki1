@@ -1,0 +1,54 @@
+<style>
+code.piece {
+background-color: antiquewhite;
+}
+blockquote {
+padding: 0.2em 1em;
+background-color: lightgoldenrodyellow;
+max-width: 40em;
+}
+span.com {
+color: gray;
+}
+</style>
+
+<p>recent bash versions reportedly introduced fallthru <code class="piece">;&</code> 
+and resume <code class="piece">;;&</code> alternatives to <code class="piece">;;</code>:</p>
+<p><a href="https://stackoverflow.com/a/24544780/4240261">stackoverflow.com/a/24544780/4240261</a>:</p>
+
+<blockquote>
+<p>Recent <code>bash</code> versions allow fall-through by using <code class="piece">;&amp;</code> in stead of <code class="piece">;;</code>:
+they also allow resuming the case checks by using <code class="piece">;;&amp;</code> there.</p>
+
+<pre><code>
+for n in 4 14 24 34
+do
+  echo -n "$n = "
+  case "$n" in
+   3? )
+     echo -n thirty-
+     <strong>;;&</strong>   <span class="com">#resume (to find ?4 later )</span>
+   "24" )
+     echo -n twenty-
+     <strong>;&</strong>   <span class="com">#fallthru</span>
+   "4" | ?4)
+     echo -n four 
+     <strong>;;&</strong>  <span class="com"># resume ( to find teen where needed )</span>
+   "14" )
+     echo -n teen
+  esac
+  echo 
+done
+</code></pre>
+
+<p>sample output</p>
+
+<pre>
+<samp>
+4 = four
+14 = fourteen
+24 = twenty-four
+34 = thirty-four
+</samp>
+</pre>
+</blockquote>
