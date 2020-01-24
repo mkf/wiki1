@@ -1,0 +1,30 @@
+<body style="max-width: 60em;">
+
+<p>Task: Find, rounded appropiately to the precision of your system's real numbers representation,
+  the lenght of the shortest closed polyline in Cartesian coordinate system of the given vertices and of
+  the number of edges equal to the number of vertices — by exhaustive search.</p>
+
+<p>Let <var>A&sub;ℝ&times;ℝ</var> be the set of all given vertices.</p>
+
+<p>Let <var>f(x, a, Y)&isin;ℝ</var>, for <var>a,&nbsp;x&nbsp;&isin;&nbsp;(A∖Y)</var> and <var>Y&nbsp;&sube;&nbsp;A</var>, be — if <var>Y&ne;&empty;</var> —
+  sum of <var>d(x,&nbsp;b)</var> and <var>f(b,&nbsp;a,&nbsp;Y∖{b})</var>, with a <var>b&isin;Y</var> for which <var>f(b,&nbsp;a,&nbsp;Y∖{b})</var> was the smallest, or — if <var>Y=&empty;</var> — <var>d(x,&nbsp;a)</var>.</p>
+
+<style>
+  sqrt {
+      display: inline-block;
+      border-top: 1px solid black;
+  }
+  sqrt::before {
+      content: "[";
+  }
+  sqrt::after {
+      content: "]";
+  }
+  span.sqrt {
+      font-size: 140%;
+  }
+</style>
+  
+<p>where <var>d(a, b) = <span class="sqrt">√</span><sqrt>(a<sub>x</sub> - b<sub>x</sub>)<sup>2</sup> + (a<sub>y</sub> - b<sub>y</sub>)<sup>2</sup></sqrt></var> for any <var>a,&nbsp;b&nbsp;&isin;&nbsp;A</var></p>
+
+<p>The result is <var>f(x, a, (A∖{a}))</var> for any selected <var>a&isin;A</var>.</p>
