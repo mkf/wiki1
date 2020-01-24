@@ -1,0 +1,78 @@
+<h1>Binary heap, heapsort</h1>
+
+<p>A binary heap is an array-based data structure that is a representation of a complete
+  (i.e. almost full
+  (full i.e. each node has either zero or two children,
+  and those with zero children are at same depth),
+  that is as if from a full tree were possibly some depthmost nodes removed from rightmost
+  but leaving at least one) binary tree
+  — with children of each parent <var>p</var> being at <var>2p-b+1</var>
+  and 2<var>p</var>-<var>b</var>+2 where <var>b</var> is the first (leftmost) index of the array —
+  that satisfies the heap property which states that children are,
+  in case of max-heap, less or equal (in case of min-heap, greater or equal)
+  to the parent. </p>
+
+<p>For any given index <var>x</var> of a child node, the index <var>p</var> of its parent can
+  be calculated with the formula &lfloor;(<var>x</var>+<var>b</var>-1)∕2&rfloor; where <var>b</var> is, again,
+  the first (leftmost) index of the heap's underlying array.
+  To avoid machine integer overflow, equivalent formula
+  &lfloor;<var>x</var>∕2&rfloor;+&lfloor;((<var>x</var> <tt>mod</tt> 2)+<var>b</var>-1)∕2&rfloor;
+  can be used. This formula is useful to calculate what would be the last parent node in a heap of a given length.
+</p>
+
+<style>
+  div.dent {
+      margin-left: 0.2em;
+      padding-left: 1.5em;
+      border-left: 1px solid gray;
+      margin-top: 0.1em;
+  }
+</style>
+
+<p>In the pseudocode below, <var>A</var>'First is the first index of an array <var>A</var>, earlier mentioned in formulas as <var>b</var>.</p>
+
+<div>
+  <strong>procedure</strong> siftDown(<var>A</var>, <var>e</var>, <var>f</var>) <div class="dent">
+    <strong>if</strong> <var>e</var>&ne;<var>f</var> <strong>then</strong> <div class="dent">
+      <var>t</var> := <var>f</var><br>
+      <var>furthest_parent</var> := furthestParent(<var>e</var>)<br>
+      <strong>while</strong> <var>t</var>&le;<var>furthest_parent</var> <strong>loop</strong> <div class="dent">
+	<var>i</var> := leftChild(<var>t</var>)<br>
+	<var>j</var> := <var>t</var><br>
+	<strong>if</strong> <var>A</var>[<var>j</var>] &lt; <var>A</var>[<var>i</var>] <strong>then</strong> <div class="dent">
+	  <var>j</var> := <var>i</var>;
+	</div>
+	<strong>if</strong> <var>i</var> &lt; <var>e</var> <strong>and then</strong>
+	<var>A</var>[<var>j</var>] &lt; <var>A</var>[<var>i</var> + 1] <strong>then</strong> <div class="dent">
+	  <var>j</var> := <var>i</var>+1
+	</div>
+	<strong>if</strong> <var>j</var>=<var>t</var> <strong>then</strong> <div class="dent">
+	  <strong>exit loop</strong>
+	</div>
+	swap(<var>A</var>[<var>t</var>], <var>A</var>[<var>j</var>])<br>
+	<var>t</var> := <var>j</var>
+      </div>
+    </div>
+  </div>
+  <strong>procedure</strong> heapify(<var>A</var>, <var>e</var>) <div class="dent">
+    <strong>if</strong> <var>e</var>&ne;<var>A</var>'First <strong>then</strong> <div class="dent">
+      <var>furthest_parent</var> := furthestParent(<var>e</var>)<br>
+      <strong>for</strong> <var>i</var> := <var>furthest_parent</var>
+      <strong>downto</strong> <var>A</var>'First <strong>loop</strong> <div class="dent">
+	siftDown(<var>A</var>, <var>e</var>, <var>i</var>)
+      </div>
+    </div>
+  </div>
+  <strong>procedure</strong> heapsort(<var>A</var>, <var>e</var>) <div class="dent">
+    <strong>if</strong> <var>e</var>&ne;<var>A</var>'First <strong>then</strong> <div class="dent">
+      heapify(<var>A</var>, <var>e</var>)<br>
+      <var>h</var> := <var>e</var> - 1<br>
+      <strong>while</strong> <var>h</var> &ge; <var>A</var>'First <strong>then</strong> <div class="dent">
+	swap(<var>A</var>, <var>h</var>, <var>A</var>'First)<br>
+	<var>h</var> := <var>h</var> - 1<br>
+	siftDown(<var>A</var>, <var>h</var>, <var>A</var>'First)
+      </div>
+    </div>
+  </div>
+</div>
+<hr style="margin: 4em;">
