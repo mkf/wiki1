@@ -1,0 +1,37 @@
+<body style="max-width: 40em;">
+
+<p>Task: Given a multiset and an order on it, find all permutations of it in lexicographic order.</p>
+
+<p>Let <var>I</var> be the given multiset, optimally represented as a sorted (by the given order) multiset structure optimized
+for iterating in order and for passing along one-smaller subsets until emptiness while soon afterwards needing the whole multiset again.<p>
+
+<p>We should render our input (the multiset and the order on it) into an immutable array of all elements of the multiset ordered,
+  as iterating in order over the majority of elements will be utmostly oft.</p>
+
+<p>We need a way to pass one-smaller sub(multi)sets (of sub(multi)sets of sub(multi)sets…) of our given multiset efficiently.
+  Passing along just a copy with one element removed, like by list comprehensions, will do, but will be rather na&iuml;ve.</p>
+
+<style>
+  div.dent {
+      margin-left: 0.2em;
+      padding-left: 1.5em;
+      border-left: 1px solid gray;
+      margin-top: 0.1em;
+  }
+</style>
+
+<div>
+  <strong>procedure</strong> write_permutations(<var>of_what</var>, <var>prefix</var>) <div class="dent">
+    <strong>if</strong> empty(<var>of_what</var>) <strong>then</strong> <div class="dent">
+      write(<var>prefix</var>))
+    </div><strong>else</strong><div class="dent">
+      <strong>for</strong> <var>i</var> <strong>in</strong> <var>of_what</var> (in order!) <strong>loop</strong> <div class="dent">
+	write_permutations(<var>of_what</var> with one <var>i</var> removed, <var>prefix</var>+<var>i</var>)
+      </div>
+    </div>
+  </div>
+</div>
+  
+<p>An optimal solution would be to store at what position in the permutation the algorithm is and store a mapping from element references (usually indices of array) to what positions are they on.</p>
+
+<p>We may also store <var>prefix</var> as a mutable global array. Storing everything as globals prompts us to get rid of the recurrency and make it all iterative. For that purpose we can make <var>prefix</var> of <var>sorted_multiset</var> indices instead of elements, and store in a boolean variable whether we are at a given moment increasing under caret or moving caret to right and setting to first under caret, or whether we are backtracking-skipping, increasing under caret even if there would be a possibility to advance caret (which we would be just coming back from but that information needs to be conveyed). If i am not wrong, above variables would be enough for a single-loop implementation, maybe even avoiding any extraneous exit points besides usual conditional statements, and one on end.</p>
