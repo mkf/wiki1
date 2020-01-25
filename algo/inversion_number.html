@@ -1,0 +1,103 @@
+<p>Task: counting inversions - calculating inversion number of a permutation of first <var>n</var> natural numbers —
+ in <var>n</var><tt>log</tt><var>n</var>.</p>
+
+<style>
+  div.dent {
+      margin-left: 0.2em;
+      padding-left: 1.5em;
+      border-left: 1px solid gray;
+      margin-top: 0.1em;
+  }
+</style>
+
+<p>The most usual approach is to base on <em>merge sort</em>. Not being a fan of this approach, i tried hard to avoid it.</p>
+
+<p>The below is loosely derived/inspired from <a href="https://stackoverflow.com/a/47845960/4240261"><var>PM2 Ring</var>'s answer</a>
+from the code with the signature</p>
+<p><div style="background-color: lightgray; display: table;"><code><pre>
+# Using binary tree counting, derived from C++ code (?) by prasadvk
+# <a href="https://stackoverflow.com/a/16056139">https://stackoverflow.com/a/16056139</a>
+def ltree_count_PM2R(a):
+</code></pre></div></p>
+
+<p>and from <a href="https://github.com/mkf/asdspark/tree/master/asdinve/src">the code i wrote firstly in Ada2012</a>.
+  Note: if you want to see that code, you might want to try going back in time in commit history because
+  from some point i was mostly just adapting it to what SPARK2014's prover can do,
+  and that mangled it terribly.</p>
+
+<div>
+  <var>&sigma;</var>[1..<var>n</var>]<br>
+  <var>tree</var>[1..<var>n</var>]<br>
+  <var>count_beyond</var>[1..<var>n</var>]<br>
+  <strong>function</strong> inserting(root, new) <div class="dent">
+    <var>t</var> := 0<br>
+    <strong>if</strong> <var>&sigma;</var>[<var>new</var>] &lt; <var>&sigma;</var>[<var>root</var>] <strong>then</strong> <div class="dent">
+      <var>t</var> := 1 + <var>count_beyond</var>[<var>root</var>]<br>
+      <var>branch_side</var> := Left
+    </div>
+    <strong>else</strong> <div class="dent">
+      increment <var>count_beyond</var>[<var>root</var>]<br>
+      <var>branch_side</var> := Right
+    </div>
+    <strong>if</strong> <var>tree</var>[<var>root</var>].children[<var>branch_side</var>] &ne; NIL <div class="dent">
+      <var>t</var> := <var>t</var> + inserting(<var>tree</var>[<var>root</var>].children[<var>branch_side</var>], <var>new</var>)
+    </div> <strong>else</strong> <div class="dent">
+      <var>tree</var>[<var>root</var>].children[<var>branch_side</var>] := <var>new</var>
+    </div>
+    <strong>return</strong> <var>t</var>
+  </div>
+  <strong>function</strong> result <div class="dent">
+    <strong>var</strong> <var>acc</var> := 0<br>
+    <strong>for</strong> <var>i</var> := 1 <strong>to</strong> <var>n</var> <strong>loop</strong> <div class="dent">
+      <var>acc</var> := <var>acc</var> + inserting(1, <var>i</var>)
+    </div>
+    <strong>return</strong> <var>acc</var>
+  </div>
+</div>
+
+<p>I later were trying to develop a different approach that would make use of having the set be
+  <strong>first <var>n</var></strong> natural numbers (the above does not, at all):
+  I thought about taking <var>&sigma;</var><sup>-1</sup>,
+  since it would be suitable for a lookup table because of that,
+  then with the help of it finding, for elements from largest to smallest or vice versa,
+  how many smaller elements (or greater, respectively)
+  (which would be the ones left for processing) were there to the right (or to the left, respectively) of the permutation.
+  I discovered this approach seemed to produce correct results when done by hand, but seems easy to implement.
+</p>
+
+<div style="margin: 2em 0;">
+<p>In <samp>2 5 4 6 3 1</samp> there are 9 inversions.</p>
+<div>
+<p><samp>2 5 4 6 3 1</samp> — 2 smaller on the right side of largest</p>
+<p><samp>2 5 4 _ 3 1</samp> — 3 smaller on the right side of largest</p>
+<p><samp>2 _ 4 _ 3 1</samp> — 2 smaller on the right side of largest</p>
+<p><samp>2 _ _ _ 3 1</samp> — 1 smaller on the right side of largest</p>
+<p><samp>2 _ _ _ _ 1</samp> — 1 smaller on the right side of largest</p>
+</div></div>
+
+<div style="margin: 2em 0;">
+  <p>In <samp>3 1 2 4 6 5</samp> there are 3 inversions.</p><div>
+    <p><samp>3 1 2 4 6 5</samp> — 1 smaller on the right side of largest</p>
+    <p><samp>3 1 2 4 _ 5</samp> — 0 smaller on the right side of largest</p>
+    <p><samp>3 1 2 4 _ _</samp> — 0 smaller on the right side of largest</p>
+    <p><samp>3 1 2 _ _ _</samp> — 2 smaller on the right side of largest</p>
+    <p><samp>_ 1 2 _ _ _</samp> — 0 smaller on the right side of largest</p>
+</div></div>
+
+<p>There comes the question — is that <q><var>n<tt>log</tt><var>n</var></q> like the task asked?
+    What is supposed to be the dominating operation though?
+    Classic approach to this problem is <em>merge sort</em>, and other approaches
+  (like the <em><q>binary counting tree</q></em>) do not rely on it being <strong>first <var>n</var></strong> natural numbers,
+  and they use comparisons for sorting and it is considering the dominating operation.
+  But we don't need to do any comparisons between the elements of permutation here —
+  but with them being the same first <var>n</var> natural numbers, does that change anything if we were to
+  do comparisons on the indices? The question is, could we do without any number comparisons.
+  And if we couldn't, would it be facilitated to employ some more advanced algorithms to optimize them.
+</p>
+
+<p>Because, how do we get the information how many smaller (i.e. yet to be processed)
+  are there on the right of our element? When we process the larger, we need a way to store the information about their positions.
+  We could do a na&iuml;ve boolean lookup table — but maybe something like a heap-like representation of a tree,
+  or simply a two-way list, would be better? Maybe build an order statistic tree? Or maybe a variation of Fenwick Binary Indexed Tree?</p>
+
+<hr style="margin: 4em;">
