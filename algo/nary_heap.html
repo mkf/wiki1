@@ -1,22 +1,27 @@
-<h1>Binary heap, heapsort</h1>
-
-<p>A binary heap is an array-based data structure that is a representation of a complete
+<h1>n–ary heap</h1>
+<p>An <var>a</var>–ary heap, also called <var>d</var>–ary heap and <var>n</var>–ary heap,
+  is an array-based data structure that is a representation of a complete
   (i.e. almost full
-  (full i.e. each node has either zero or two children,
+  (full i.e. each node has either zero or <var>a</var> children,
   and those with zero children are at same depth),
   that is as if from a full tree were possibly some depthmost nodes removed from rightmost
-  but leaving at least one) binary tree
-  — with children of each parent <var>p</var> being at <var>2p&minus;b+1</var>
-  and 2<var>p</var>&minus;<var>b</var>+2 where <var>b</var> is the first (leftmost) index of the array —
+  but leaving at least one) <var>a</var>-ary tree
+  — with children of each parent <var>p</var> being at <var>ap&minus;b+k</var> for
+  <var>k</var>-th children numbered from 1,
+  where <var>b</var> is the first (leftmost) index of the array —
   that satisfies the heap property which states that children are,
   in case of max-heap, less or equal (in case of min-heap, greater or equal)
   to the parent. </p>
 
 <p>For any given index <var>x</var> of a child node, the index <var>p</var> of its parent can
-  be calculated with the formula &lfloor;(<var>x</var>+<var>b</var>&minus;1)∕2&rfloor; where <var>b</var> is, again,
+  be calculated with the formula
+  &lfloor;(<var>x</var>+<var>b</var>&minus;1)∕<var>a</var>&rfloor;
+  where <var>b</var> is, again,
   the first (leftmost) index of the heap's underlying array.
   To avoid machine integer overflow, equivalent formula
-  &lfloor;<var>x</var>∕2&rfloor;+&lfloor;((<var>x</var> <tt>mod</tt> 2)+<var>b</var>&minus;1)∕2&rfloor;
+  &lfloor;<var>x</var>∕<var>a</var>&rfloor;+&lfloor;((<var>x</var>
+  <tt>mod</tt>
+  <var>a</var>)+<var>b</var>&minus;1)∕<var>a</var>&rfloor;
   can be used. This formula is useful to calculate what would be the last parent node in a heap of a given length.
 </p>
 
@@ -39,15 +44,13 @@
       <var>t</var> := <var>f</var><br>
       <var>furthest_parent</var> := furthestParent(<var>e</var>)<br>
       <strong>while</strong> <var>t</var>&le;<var>furthest_parent</var> <strong>loop</strong> <div class="dent">
-	<var>i</var> := leftChild(<var>t</var>)<br>
 	<var>j</var> := <var>t</var><br>
-	<strong>if</strong> <var>A</var>[<var>j</var>] &lt; <var>A</var>[<var>i</var>] <strong>then</strong> <div class="dent">
-	  <var>j</var> := <var>i</var>;
-	</div>
-	<strong>if</strong> <var>i</var> &lt; <var>e</var> <strong>and then</strong>
-	<var>A</var>[<var>j</var>] &lt; <var>A</var>[<var>i</var> + 1] <strong>then</strong> <div class="dent">
-	  <var>j</var> := <var>i</var>+1
-	</div>
+	<strong>for</strong> <var>i</var> := leftChild(<var>t</var>) <strong>to</strong>
+	max(leftChild(<var>t</var>)+<var>a</var>&minus;1, e) <strong>loop</strong>
+	<div class="dent">
+	  <strong>if</strong> <var>A</var>[<var>j</var>] &lt;
+	  <var>A</var>[<var>i</var>+1] <strong>then</strong> <div class="dent">
+	    <var>j</var> := <var>i</var></div></div>
 	<strong>if</strong> <var>j</var>=<var>t</var> <strong>then</strong> <div class="dent">
 	  <strong>exit loop</strong>
 	</div>
@@ -59,19 +62,20 @@
 </div>
 <p>
   To reiterate, what <tt>siftDown</tt> does is, starting with a given node,
-  comparing the selected node to its children, and if the larger child is larger than the selected node,
+  comparing the selected node to its children, and if the largest child is larger than the selected node,
   swapping them and repeating the procedure for the index of the node that we just moved down,
   otherwise being done.
 </p>
 <p>
-  It could be thought as taking the three nodes and rotating them
+  It could be thought as taking the <var>a</var>+1 nodes and rotating them
   (and then doing the same with the one previously on top),
-  like what we know from balancing binary search trees, except here the
-  order of the children doesn't matter and thus we make just one swap instead of two —
+  like what we know from balancing <var>a</var>–ary search trees, except here the
+  order of the children doesn't matter and thus we make just one swap instead of
+  <var>a</var> —
   but that can be considered as but an optimization.
 </p>
 <p>
-  Under the assumption that both (all, one if there is just one) subheaps
+  Under the assumption that all (less than or <var>a</var>) subheaps
   — children of our given node — satisfied the heap property on their own,
   the (sub- — if <var>f&gt;b</var>)heap resulting from <tt>siftDown</tt>
   satisfies the heap property entirely.
@@ -90,7 +94,8 @@
 <p>
   Since single-element (sub)heaps satisfy the heap property always,
   what <tt>heapify</tt> does is, by starting with the furthest node that
-  is a parent to any children (one or two) and performing <tt>siftDown</tt> on it,
+  is a parent to any children (between 1 and <var>a</var>)
+  and performing <tt>siftDown</tt> on it,
   thus always satisfying the precondition of <tt>siftDown</tt> by having the subheaps
   already performed upon. Thus from that, after it reaches the root of heap
   and performs <tt>siftDown</tt> on it, the whole heap satisfies the heap property.
@@ -118,16 +123,21 @@
   is in same place as is it supposed to be by the order, the array being entirely sorted.
 </p>
 
+<p>Much of this article is just an alteration of
+  <a href="heapsort_binheap">the article on binary heap and heapsort</a>,
+  hence an implementation of heapsort and everything.</p>
+
 <h2>See also:</h2>
 <ul>
-  <li><a href="https://en.wikipedia.org/wiki/Heapsort"><q>Heapsort</q> on English Wikipedia</a></li>
-  <li><a href="https://en.wikipedia.org/wiki/Binary_heap"><q>Binary heap</q> on English Wikipedia</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/d-ary_heap"><q>d–ary heap</q> on English Wikipedia</a></li>
 </ul>
 
-<h2>You might be also interested in:</h2>
+<h2>Trivia</h2>
 <ul>
-  <li><a href="nary_heap.html">
-      <var>n</var>–ary heap (aka <var>d</var>–ary, <var>a</var>–ary)</a></li>
+  <li>despite <a href="https://en.wikipedia.org/wiki/d-ary_heap">being called
+      <var>d</var>–ary on English Wikipedia</a>,
+    <a href="https://pl.wikipedia.org/wiki/Kopiec_a-arny">on Polish Wikipedia
+      it is called <var>a</var>–ary</a></li>
 </ul>
 
 <hr style="margin: 4em;">
