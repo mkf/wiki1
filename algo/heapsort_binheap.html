@@ -56,6 +56,27 @@
       </div>
     </div>
   </div>
+</div>
+<p>
+  To reiterate, what <tt>siftDown</tt> does is, starting with a given node,
+  comparing the selected node to its children, and if the larger child is larger than the selected node,
+  swapping them and repeating the procedure for the index of the node that we just moved down,
+  otherwise being done.
+</p>
+<p>
+  It could be thought as taking the three nodes and rotating them
+  (and then doing the same with the one previously on top),
+  like what we know from balancing binary search trees, except here the
+  order of the children doesn't matter and thus we make just one swap instead of two —
+  but that can be considered as but an optimization.
+</p>
+<p>
+  Under the assumption that both (all, one if there is just one) subheaps
+  — children of our given node — satisfied the heap property on their own,
+  the (sub- — if <var>f&gt;b</var>)heap resulting from <tt>siftDown</tt>
+  satisfies the heap property entirely.
+</p>
+<div>
   <strong>procedure</strong> heapify(<var>A</var>, <var>e</var>) <div class="dent">
     <strong>if</strong> <var>e</var>&ne;<var>A</var>'First <strong>then</strong> <div class="dent">
       <var>furthest_parent</var> := furthestParent(<var>e</var>)<br>
@@ -65,11 +86,21 @@
       </div>
     </div>
   </div>
+</div>
+<p>
+  Since single-element (sub)heaps satisfy the heap property always,
+  what <tt>heapify</tt> does is, by starting with the furthest node that
+  is a parent to any children (one or two) and performing <tt>siftDown</tt> on it,
+  thus always satisfying the precondition of <tt>siftDown</tt> by having the subheaps
+  already performed upon. Thus from that, after it reaches the root of heap
+  and performs <tt>siftDown</tt> on it, the whole heap satisfies the heap property.
+</p>
+<div>
   <strong>procedure</strong> heapsort(<var>A</var>, <var>e</var>) <div class="dent">
     <strong>if</strong> <var>e</var>&ne;<var>A</var>'First <strong>then</strong> <div class="dent">
       heapify(<var>A</var>, <var>e</var>)<br>
       <var>h</var> := <var>e</var> - 1<br>
-      <strong>while</strong> <var>h</var> &ge; <var>A</var>'First <strong>then</strong> <div class="dent">
+      <strong>while</strong> <var>h</var> &gt; <var>A</var>'First <strong>then</strong> <div class="dent">
 	swap(<var>A</var>, <var>h</var>, <var>A</var>'First)<br>
 	<var>h</var> := <var>h</var> - 1<br>
 	siftDown(<var>A</var>, <var>h</var>, <var>A</var>'First)
@@ -77,6 +108,15 @@
     </div>
   </div>
 </div>
+<p>
+  And heapsort first takes an array that is unassumed to be either sorted or a heap,
+  then makes it satisfy the heap property entirely by performing <tt>heapify</tt>
+  on it, then takes the largest element — from the heap property, the first one —
+  and shortens the heap by putting it behind and placing the previously leaf-of-heap element on
+  top, then performing <tt>siftDown</tt> on the lenght of the new heap which is one less than before
+  — and then again, takes the largest element… so on. Finally it ends up with just one element, which
+  is in same place as is it supposed to be by the order, the array being entirely sorted.
+</p>
 
 <h2>See also:</h2>
 <ul>
