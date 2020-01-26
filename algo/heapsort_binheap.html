@@ -6,17 +6,17 @@
   and those with zero children are at same depth),
   that is as if from a full tree were possibly some depthmost nodes removed from rightmost
   but leaving at least one) binary tree
-  — with children of each parent <var>p</var> being at <var>2p-b+1</var>
-  and 2<var>p</var>-<var>b</var>+2 where <var>b</var> is the first (leftmost) index of the array —
+  — with children of each parent <var>p</var> being at <var>2p&minus;b+1</var>
+  and 2<var>p</var>&minus;<var>b</var>+2 where <var>b</var> is the first (leftmost) index of the array —
   that satisfies the heap property which states that children are,
   in case of max-heap, less or equal (in case of min-heap, greater or equal)
   to the parent. </p>
 
 <p>For any given index <var>x</var> of a child node, the index <var>p</var> of its parent can
-  be calculated with the formula &lfloor;(<var>x</var>+<var>b</var>-1)∕2&rfloor; where <var>b</var> is, again,
+  be calculated with the formula &lfloor;(<var>x</var>+<var>b</var>&minus;1)∕2&rfloor; where <var>b</var> is, again,
   the first (leftmost) index of the heap's underlying array.
   To avoid machine integer overflow, equivalent formula
-  &lfloor;<var>x</var>∕2&rfloor;+&lfloor;((<var>x</var> <tt>mod</tt> 2)+<var>b</var>-1)∕2&rfloor;
+  &lfloor;<var>x</var>∕2&rfloor;+&lfloor;((<var>x</var> <tt>mod</tt> 2)+<var>b</var>&minus;1)∕2&rfloor;
   can be used. This formula is useful to calculate what would be the last parent node in a heap of a given length.
 </p>
 
@@ -102,7 +102,7 @@
       <var>h</var> := <var>e</var> - 1<br>
       <strong>while</strong> <var>h</var> &gt; <var>A</var>'First <strong>then</strong> <div class="dent">
 	swap(<var>A</var>, <var>h</var>, <var>A</var>'First)<br>
-	<var>h</var> := <var>h</var> - 1<br>
+	<var>h</var> := <var>h</var> &minus; 1<br>
 	siftDown(<var>A</var>, <var>h</var>, <var>A</var>'First)
       </div>
     </div>
