@@ -1,0 +1,58 @@
+<title>on Unix C bindings</title>
+
+<h1>on Unix C bindings</h1>
+
+<p>Well, not exactly Unix. This is one of those sites the permalink's of which
+i might not care much. If you see this in webarchive, or if it is just cached in
+  your browser or your brain, please note that this is probably still available under some other path.
+</p>
+
+<h2 id="signals">on signals</h2>
+<p>with <code>signal</code> function you can assign a handler function (or a constant saying that you
+  want to ignore or restore default behavior) to a signal. That function can do stuff like, sending that signal
+  to another process with <code>kill</code> instead and leaving the receiving process intact.
+</p>
+<p>the <code>kill</code> function returns 0 on success, 1 on failure, and 64 if
+  you asked it to do a group of processes and for some it succeeded but for some
+  it did not.
+</p>
+<p>the function <code>strsignal</code> returns strings such as <q><em>Interrupt</em></q> for 2 (<code>SIGINT</code>).
+  I have not found a way to obtain the <q><samp>SIGINT</samp></q> string, but that's probably not hard.
+  Email me if this here is still up and it says i have not found a way and you did, if you want to bother with being helpful.
+</p>
+<h2 id="users">users</h2>
+<p>get effective user ID of the user who owns the process of the program with <code>geteuid</code> function</p>
+<p>get the <code>struct passwd *</code> for a user ID by using <code>getpwuid</code> function.</p>
+<p>from <code>struct passwd *</code> you can get <code>-&gt;pw_name</code> (username), <code>-&gt;pw_dir</code> (home directory path)</p>
+<p>you can also get <code>struct passwd *</code> by username by using <code>getpwnam</code> function.</p>
+<h2 id="cwd">getting current working directory</h2>
+<p>you can get your current working directory using the function <code>getcwd</code>.</p>
+<p>don't use the deprecated <code>getwd</code>, which does not allow to specify the size of your buffer,
+  and can cause error of writing beyond the end of your allocated buffer</p>
+<p>there is also a GNU-specific <code>get_current_dir_name</code> function, which will allocate the string for you,
+  note that you will have to <code>free</code> it.</p>
+<h2 id="chdir">changing the current directory (cd)</h2>
+<p>one neat trick is to just arithmetically negate the return value of <code>chdir</code> since
+  it can return only 0 or -1 anyway. Note: really, look at what the error was, see the <code>errno</code></p>
+<h2 id="errno">on <code>errno</code></h2>
+<p><em>errno</em> is a global variable that stores the error of last thing that failed that uses it.
+  in <code>&lt;errno.h&gt;</code> you can find not only them by their names, but also
+  functions like <code>strerror</code> which will give you a neat description string for an errno.</p>
+<h2 id="fork"><code>fork</code></h2>
+<p>the function <code>fork</code> forks your program (process) into two processes. To one it
+  returns zero (the new one, the child), and to the other (the parent, the original one) it returns the new process ID of the child.
+  If there was an error, it returns <samp>-1</samp>, and you can see the error in <tt>errno</tt>.</p>
+<h2 id="waitpid"><code>waitpid</code></h2>
+<p>the function <code>waitpid</code> will make your program process wait until the process that you called it about
+  will terminate. or, if you ask it to, also if it will stop. and if you ask, also if it gets continued.
+  default is just about termination. look up its manual for info about a bunch of macros
+  that will tell you what does the status value that <code>waitpid</code> wrote for you really means,
+  like <code>WIFEXITED</code> whether it exited normally, <code>WEXITSTATUS</code> with what exit code;
+  <code>WIFSIGNALED</code> whether by unhandled signal, <code>WTERMSIG</code> from what signal.
+</p>
+<h2 id="exec"><code>exec*</code></h2>
+<p>the <code>exec*</code> functions <q>replace the current process image with new process image</q>, like from an executable file.</p>
+<p>the function <code>execvp</code> and <code>execv</code> take just the filename and the arguments list.</p>
+<p>the ones ending with «<tt>e</tt>» also take a table of <code>KEY=value</code> environment variable entries. but they are inherited besides that.</p>
+<p>the ones with «<tt>p</tt>» differ from the ones without in that they will also, for relative filepaths,
+  look in all the directories specified in the <code><var>PATH</var></code> variable.</p>

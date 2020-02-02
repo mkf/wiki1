@@ -1,0 +1,29 @@
+<title>on the C programming language</title>
+
+<h1>on the C programming language</h1>
+
+<ul>
+  <li>There is a function called <code>ungetc</code> that allows you to
+    push back one character back into your string. But just one — it does
+    not guarantee to work if you try to push back any more immediately afterwards.
+    <p>That can be useful for pushing back first character that is not a space
+      in spaces-delimited data, instead of having to buffer it.</p>
+  </li>
+  <li>Using <code>a+</code> flag for <code>fopen</code> should allow you to
+    append to the and of a file without seeking to end or ensuring a file lock,
+    and read from any place in that file by use of <code>fseek</code>
+  <li>see <code>strdup</code>, <code>isspace</code>, <code>strcmp</code>, <code>strlen</code>, <code>memcpy</code>, <code>snprintf</code>,
+    <code>puts</code>, <code>putc</code>, <code>atoi</code>
+  <li>easy (naïve) way to implement a command prompt with hardcoded commands is
+    to have an enum of all commands (plus one more <q>none</q> element)
+    and an array of all their strings (as <code>const char* const</code>)
+    written in same order, and a function to compare the input agains each of all from zero to
+    the <q>none</q> element
+  <li>also see <a href="/unix/c_bindings.html">on Unix C bindings</a>
+  <li>if you write string literals one by one separated by nothing but whitespace characters,
+    they are considered one string literal.
+    <p>So you can, like, «<pre><code>&quot;\033&quot; &quot;[1;33m&quot; &quot;[%s]&quot; &quot;\033&quot; &quot;[0m&quot; &quot; : &quot;</code></pre>»
+    when it comes to stuff like ANSI escape codes which sometimes feel like they mix up with other stuff.</p>
+    <p>That can be useful for writing strings that are too long for one line. Note that you will still need
+      <code>\n</code> escapes at the ends for multiline strings with line breaks.</p>
+    </li>
