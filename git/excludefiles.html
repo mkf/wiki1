@@ -1,0 +1,21 @@
+<title>gitignore, excludesfile</title>
+
+<h1>gitignore, excludesfile</h1>
+
+<h2 id="contents"></h2>
+<p>Git does not traverse directories excluded in excludesfiles.
+  Thus to exclude everything in a directory besides something,
+  you have to first exclude <code>**</code> under that directory,
+  and then add negating patterns for each of the subdirectories leading
+  to the files, ending with the negating pattern for the file.
+</p>
+<h2 id="loading"></h2>
+<p>Firstly, <code>.gitignore</code> files from the directory subtree of
+  <code>$GIT_WORK_TREE.
+</p><p>Then, <code>$GIT_DIR/info/exclude</code>. This one is not recommended to be staged.</p>
+<p>Now, there is <code>core.excludesFile</code> git config entry. I am guessing that there can
+  be just one <code>core.excludesFile</code>. Hence if you set it to something else in your
+  repository's <code>/.gitconfig</code> or in <code>$GIT_CONFIG</code>,
+  the one that you defined in your <code>~/.gitconfig</code>,
+  nor <code>$XDG_CONFIG_HOME/git/ignore</code>, are not loaded.
+</p>
