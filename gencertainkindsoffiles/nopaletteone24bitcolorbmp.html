@@ -1,0 +1,100 @@
+<h1>generating a one-color 24bit bmp that stores the color value in full for each pixel instead of palleting it</h1>
+<h2>how should that look in bytes</h2>
+<table border="1" data-table="" data-tablelook="1696">
+<tbody>
+  <tr>
+    <td>Offset (B)</td>
+    <td>Rozm.&nbsp;(B)</td>
+    <td>Opis&nbsp;(liczby: bajty w kolejności&nbsp;little-endian)</td>
+  </tr>
+  <tr>
+    <td>0</td>
+    <td>2</td>
+    <td>bajty &ldquo;BM&rdquo;</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>4</td>
+    <td>Liczba:&nbsp;zmienna&nbsp;54+H&times;(3&times;W - ((-3&times;W)&nbsp;mod&nbsp;4)</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>4</td>
+    <td>Nieużywane. Raczej zera.</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>4</td>
+    <td>Liczba:&nbsp;stała 54&nbsp;(hex: 36 00 00 00)</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>4</td>
+    <td>Liczba: stała&nbsp;40 (hex: 28 00 00 00)</td>
+  </tr>
+  <tr>
+    <td>18</td>
+    <td>4</td>
+    <td>Liczba: zmienna W</td>
+  </tr>
+  <tr>
+    <td>22</td>
+    <td>4</td>
+    <td>Liczba: zmienna&nbsp;-H</td>
+  </tr>
+  <tr>
+    <td>26</td>
+    <td>2</td>
+    <td>Liczba: stała 1&nbsp;(hex: 01 00)</td>
+  </tr>
+  <tr>
+    <td>28</td>
+    <td>2</td>
+    <td>Liczba: stała 24&nbsp;(hex: 18 00)</td>
+  </tr>
+  <tr>
+    <td>30</td>
+    <td>4</td>
+    <td>Liczba: stała 0</td>
+  </tr>
+  <tr>
+    <td>34</td>
+    <td>4</td>
+    <td>Liczba: stała 0&nbsp;[lub zmienna&nbsp;`H&times;(3&times;W - ((-3&times;W)&nbsp;mod&nbsp;4)`]</td>
+  </tr>
+  <tr>
+    <td>38</td>
+    <td>4</td>
+    <td>Liczba: wybrana rozdzielczość pozioma w pikselach na metr</td>
+  </tr>
+  <tr>
+    <td>42</td>
+    <td>4</td>
+    <td>Liczba: wybrana rozdzielczość pionowa w pikselach na metr</td>
+  </tr>
+  <tr>
+    <td>46</td>
+    <td>4</td>
+    <td>Liczba: stała 0 (jest to liczba kolor&oacute;w w palecie)</td>
+  </tr>
+  <tr>
+    <td>50</td>
+    <td>4</td>
+    <td>Liczba: stała 0</td>
+  </tr>
+  <tr>
+    <td colspan="3">Powt&oacute;rzenie H razy:</td>
+  </tr>
+  <tr>
+    <td>54+3k for k=0&hellip;W-1</td>
+    <td>3</td>
+    <td>Trzy bajty: stała, reprezentujące wybrane składowe RGB</td>
+  </tr>
+  <tr>
+    <td>54+3&times;W</td>
+    <td>-&nbsp;((-3&times;W)&nbsp;%4)</td>
+    <td>Dopełnienie&nbsp;(np.&nbsp;zerami)&nbsp;wiersza pikseli&nbsp;do&nbsp;4&nbsp;bajt&oacute;w.</td>
+  </tr>
+</tbody>
+</table>
+<h2>todo: implement generator</h2>

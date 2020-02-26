@@ -1,0 +1,19 @@
+<title>generating random bmp — log1.mikf.pl</title>
+
+<h1>generating a random 24bit bmp of given resolution</h1>
+
+<p>Get <a href="https://github.com/mkf/randombmp">github.com/mkf/randombmp</a>.</p>
+
+<p>Usage: <code>make</code>, or: <code>make&nbsp;W=1024</code>&nbsp;…</p>
+
+<p>It generates a bitmap of:</p>
+<ul>
+  <li>width W (default 2048), height H (default 1536), </li>
+  <li>source of each one-bit color channel value /dev/$S (S — default urandom)</li>
+</ul>
+<p>By:</p>
+<ol>
+  <li>Creating a file out.ppm starting with <q>P6⏎$W $H⏎255</q></li>
+  <li>H times appending to it W 3-byte blocks from the source using dd</li>
+  <li>Generating file out.bmp from out.ppm using ppmtobmp (default parameters)</li>
+</ol>
