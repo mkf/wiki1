@@ -97,4 +97,27 @@
   </tr>
 </tbody>
 </table>
+<h2>generator pseudocode</h2>
+<p>generate(<tt>signed int</tt> <var>w</var>, <var>h</var>, <tt>stream&lt;char&gt;</tt> <var>src</var>, <br>
+<tt>signed int</tt> <var>pixels_per_metre_horizontal</var>, <var>pixels_per_metre_vertical</var>)</p><ul>
+<li>write("BM", 2)
+<li>write_int32_as_le_bytes(54+(h*(3*w-((-3*w) % 4)))
+<li>pipe(whatever_or_zeroes, 4)
+<li>write_int32_as_le_bytes(54)
+<li>write_int32_as_le_bytes(40)
+<li>write_int32_as_le_bytes(w)
+<li>write_int32_as_le_bytes(-h)
+<li>write("\x01\x00", 2)
+<li>write("\x18\x00", 2)
+<li>write("\0\0\0\0", 4)
+<li>write_int32_as_le_bytes(whatever ? 0 : h*(3*w - ((-3*w) % 4)))
+<li>write_int32_as_le_bytes(pixels_per_metre_horizontal)
+<li>write_int32_as_le_bytes(pixels_per_metre_vertical)
+<li>write("\0\0\0\0", 4)
+<li>write("\0\0\0\0", 4)
+<li><var>h</var> times:<ul>
+<li><var>w</var> times: pipe(from: <var>src</var>, 3 bytes)
+<li>pipe(whatever_or_zeroes, -((-3*w)%4))
+</ul>
+</ul>
 <h2>todo: implement generator</h2>
