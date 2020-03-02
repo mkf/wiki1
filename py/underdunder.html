@@ -1,0 +1,14 @@
+<title>underscore _, dunder, mangling and specials and magics — in Python. wiki1.mikf.pl</title>
+
+<h1>underscore, dunder in Python</h1>
+
+<p><em>This page is based on <a href="https://dbader.org/blog/meaning-of-underscores-in-python">
+    <q>The Meaning of Underscores in Python</q> Dan Bader's blog post</q></em>.
+
+<table><tbody>
+    <tr><td><code>_foo</code><td>convention-only, PEP8<td>hint about internality of method</tr>
+    <tr><td><code>foo_</code><td>convention-only, PEP8<td>avoiding a keyword/naming conflict</tr>
+    <tr><td><code>__foo</code><td>name mangling (prefixing)<td>name gets rewritten by prefixing with <code>_<em>{<samp>class name</samp>}</em></code>. Idk what happens when they are import&en;renamed.</tr>
+    <tr><td><code>__foo__</code><td>called/used by language<td>name might have special meaning and special use in the language, usually just in case of methods, now or in the future. Might override pre-set stuff of the language. afaik field names can also conflict with method names just as well, contrary what one professor once seemed to tell me.</tr>
+</tbody></table>
+
