@@ -1,0 +1,91 @@
+<title>c w h attlist w &percnt;ent; 4 ruz — wiki1.mikf.pl</title>
+
+<h1>can we have parameter entities in ATTLIST for reuse</h1>
+
+<p>on Dec 1, 2013, user Sammi De Guzman asked on StackOverflow:<br>
+  (https://stackoverflow.com/questions/20308365)</p>
+
+<blockquote>
+  <h2>How do I declare attributes common to multiple elements?</h2>
+  <p>I have multiple elements I want to give these attributes:</p>
+  <div><pre><code>
+&lt;!ATTLIST [all these elements]
+    width   CDATA   "0"
+    height  CDATA   "0"
+    margin  CDATA   "0 0 0 0"
+    padding CDATA   "0 0 0 0"
+    rotation CDATA  "0"
+    halign  (left|center|right|full)    "center"
+    valign  (top|middle|bottom|full)    "middle"
+    &gt;</code></pre></div>
+  <p>Is this possible somehow in DTD, or will I have to do it manually?
+  <p>(Also, while I'm here, I don't think it was such a good idea to declare the <code>margin</code> and <code>padding</code> attributes that way. Does anyone know a better way?)
+</blockquote>
+
+<p>4.5h later, Daniel Haley answered (the answer is now the accepted answer):</p>
+<blockquote>
+  <p>Each element needs to have its own <a href="http://www.w3.org/TR/xml11/#attdecls">attribute declaration</a> (<code>ATTLIST</code>).
+    However, you can use a <a href="http://www.w3.org/TR/xml11/#dt-PE">parameter entity</a> to reuse the bulk of it.</p>
+  <div><pre><code>
+&lt;!ENTITY &percnt; attrs 
+    'width   CDATA   "0"
+     height  CDATA   "0"
+     margin  CDATA   "0 0 0 0"
+     padding CDATA   "0 0 0 0"
+     rotation CDATA  "0"
+     halign  (left|center|right|full)    "center"
+     valign  (top|middle|bottom|full)    "middle"'&gt;
+
+&lt;!ELEMENT elem1 (#PCDATA)&gt;
+&lt;!ATTLIST elem1 &percnt;attrs;&lt;
+
+&lt;!ELEMENT elem2 (#PCDATA)&gt;
+&lt;!ATTLIST elem2 &percnt;attrs;&gt;</code></pre></div>
+  <p>Here's another example that has a mix of the parameter entity references along with attributes that only appear on the individual elements.</p>
+  <div><pre><code>
+&lt;!ELEMENT elem1 (#PCDATA)&gt;
+&lt;!ATTLIST elem1 
+    attr1 CDATA #IMPLIED
+    &percnt;attrs;              &gt;
+
+&lt;!ELEMENT elem2 (#PCDATA)&gt;
+&lt;!ATTLIST elem2 
+    attr2 CDATA #IMPLIED
+    &percnt;attrs;              &gt;</code></pre></div>
+  </blockquote>
+
+<p>However, making a minimal-example file <a href="attlist-paramentities--attachments/exampl.xml"><tt>exampl.xml</tt></a>
+  out of these, we get the following results from <code>xmmlint</code>, Chromium, and Firefox:</p>
+
+<ul>
+  <li>xmllint:<div><pre><code>
+exampl.xml:12: parser error : ATTLIST: no name for Attribute
+&lt;!ATTLIST elem1 &percnt;attrs;&gt;
+                ^
+exampl.xml:12: parser error : internal error: xmlParseInternalSubset: error detected in Markup declaration
+
+&lt;!ATTLIST elem1 &percnt;attrs;&gt;
+                       ^
+Entity: line 1: 
+width   CDATA   "0"
+^
+exampl.xml:12: parser error : internal error: xmlParseInternalSubset: error detected in Markup declaration
+
+&lt;!ATTLIST elem1 &percnt;attrs;&gt;
+                       ^
+exampl.xml:14: parser error : StartTag: invalid element name
+&lt;!ELEMENT elem2 (#PCDATA)&gt;
+ ^
+exampl.xml:14: parser error : Extra content at the end of the document
+&lt;!ELEMENT elem2 (#PCDATA)&gt;
+ ^
+</code></pre></div>
+  </li>
+  <li>Chromium: <code>error on line 12 at column 17: ATTLIST: no name for Attribute</code></li>
+  <li>Firefox: <div><pre><code>
+XML Parsing Error: illegal parameter entity reference
+Location: file:///<del>path</del>/exampl.xml
+Line Number 12, Column 17:</code></pre></div></li>
+</ul>
+
+<p>So, can we really use that? Is that answer correct? What can we use that method in? I guess not in much.</p>

@@ -1,0 +1,26 @@
+<!DOCTYPE elems [
+<!ENTITY % attrs 
+    'width   CDATA   "0"
+     height  CDATA   "0"
+     margin  CDATA   "0 0 0 0"
+     padding CDATA   "0 0 0 0"
+     rotation CDATA  "0"
+     halign  (left|center|right|full)    "center"
+     valign  (top|middle|bottom|full)    "middle"'>
+
+<!ELEMENT elem1 (#PCDATA)>
+<!ATTLIST elem1 %attrs;>
+
+<!ELEMENT elem2 (#PCDATA)>
+<!ATTLIST elem2 %attrs;>
+
+<!ELEMENT elem1a (#PCDATA)>
+<!ATTLIST elem1a 
+    attr1 CDATA #IMPLIED
+    %attrs;              >
+
+<!ELEMENT elem2a (#PCDATA)>
+<!ATTLIST elem2a 
+    attr2 CDATA #IMPLIED
+    %attrs;              >
+]>
