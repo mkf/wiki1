@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>~/obecnoscLTMcw3.tex.html</title>
+<meta name="Generator" content="Vim/8.1">
+<meta name="plugin-version" content="vim7.4_v2">
+<meta name="syntax" content="tex">
+<meta name="settings" content="use_css,no_foldcolumn,prevent_copy=">
+<meta name="colorscheme" content="elflord">
+<style type="text/css">
+<!--
+pre { font-family: monospace; color: #ffffff; background-color: #000000; }
+body {
+  font-family: monospace; color: #ffffff; background-color: #000000;
+  padding-bottom: 60%;
+}
+* { font-size: 1em; }
+.Constant { color: #ff40ff; }
+.Special { color: #c000c0; }
+.Statement { color: #ffff00; }
+.Comment { color: #008080; }
+.PreProc { color: #5fd7ff; }
+-->
+</style>
+</head>
+<body>
+<img style="
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    max-height: 40%;
+    max-width: 50%;
+  "
+  src="thumb.png" />
+<pre id='vimCodeElement'>
+<span class="Comment">% !TEX TS-program = pdflatex</span>
+<span class="Comment">% !TEX encoding = UTF-8 Unicode</span>
+<span class="Statement">\documentclass</span><span class="Special">[</span><span class="Constant">11pt</span><span class="Special">]{</span><span class="PreProc">article</span><span class="Special">}</span> <span class="Comment">% use larger type; default would be 10pt</span>
+<span class="Statement">\usepackage</span><span class="Special">[</span><span class="Constant">utf8</span><span class="Special">]</span><span class="Special">{</span><span class="Special">inputenc</span><span class="Special">}</span>
+<span class="Statement">\usepackage</span><span class="Special">{</span><span class="Special">geometry</span><span class="Special">}</span>
+<span class="Statement">\geometry</span><span class="Special">{</span>c6paper<span class="Special">}</span>
+<span class="Statement">\geometry</span><span class="Special">{</span>vmargin=<span class="Constant">0.3in</span>,hmargin=<span class="Constant">0.25in</span><span class="Special">}</span> <span class="Comment">% for example, change the margins to 2 inches all round</span>
+<span class="Comment">%\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent</span>
+<span class="Statement">\usepackage</span><span class="Special">{</span><span class="Special">amsmath</span><span class="Special">}</span>
+<span class="Statement">\usepackage</span><span class="Special">{</span><span class="Special">amssymb</span><span class="Special">}</span>
+<span class="Statement">\usepackage</span><span class="Special">{</span><span class="Special">verbatim</span><span class="Special">}</span>
+<span class="PreProc">\begin{document}</span>
+
+<span class="PreProc">\section</span>*<span class="Special">{</span>Zadanie 1c<span class="Special">}</span>
+<span class="Statement">\begin</span><span class="Special">{</span><span class="PreProc">center</span><span class="Special">}$</span><span class="Special">(p</span><span class="Statement">\Rightarrow</span><span class="Special"> q) </span><span class="Statement">\Rightarrow</span><span class="Special"> (q</span><span class="Statement">\Rightarrow</span><span class="Special"> p)</span><span class="Special">$</span><span class="Special">\\</span>
+<span class="Statement">\vspace</span><span class="Special">{</span><span class="Constant">0.2cm</span><span class="Special">}</span>
+<span class="Statement">\begin</span><span class="Special">{</span><span class="PreProc">tabular</span><span class="Special">}{</span>c c<span class="Special">}</span>
+APN <span class="Special">&amp;</span> <span class="Special">$</span><span class="Special">(p</span><span class="Statement">\land</span><span class="Special"> q)</span><span class="Statement">\lor</span><span class="Special">(p</span><span class="Statement">\land</span><span class="Special"> </span><span class="Statement">\neg</span><span class="Special"> q)</span><span class="Statement">\lor</span><span class="Special">(</span><span class="Statement">\neg</span><span class="Special"> p </span><span class="Statement">\land</span><span class="Special"> </span><span class="Statement">\neg</span><span class="Special"> q)</span><span class="Special">$</span><span class="Special">\\</span>
+KPN <span class="Special">&amp;</span> <span class="Special">$</span><span class="Special">(p</span><span class="Statement">\lor</span><span class="Special"> </span><span class="Statement">\neg</span><span class="Special"> q)</span><span class="Special">$</span>
+<span class="Statement">\end</span><span class="Special">{</span><span class="PreProc">tabular</span><span class="Special">}</span><span class="Statement">\end</span><span class="Special">{</span><span class="PreProc">center</span><span class="Special">}</span>
+
+<span class="PreProc">\section</span>*<span class="Special">{</span>Zadanie 2c<span class="Special">}</span>
+
+<span class="Statement">\begin</span><span class="Special">{</span><span class="PreProc">align*</span><span class="Special">}</span>
+(p<span class="Statement">\Rightarrow</span> q) <span class="Special">&amp;</span><span class="Statement">\Leftrightarrow</span> (p<span class="Statement">\land</span> <span class="Statement">\neg</span> q)<span class="Special">\\</span>
+<span class="Statement">\neg</span> p <span class="Statement">\lor</span> q <span class="Special">&amp;</span><span class="Statement">\Leftrightarrow</span> p<span class="Statement">\land</span> <span class="Statement">\neg</span> q<span class="Special">\\</span>
+(<span class="Statement">\neg</span> p <span class="Statement">\lor</span> q <span class="Statement">\Rightarrow</span> p <span class="Statement">\land</span> <span class="Statement">\neg</span> q) <span class="Special">&amp;</span><span class="Statement">\land</span> (p <span class="Statement">\land</span> <span class="Statement">\neg</span> q <span class="Statement">\Rightarrow</span> <span class="Statement">\neg</span> p <span class="Statement">\lor</span> q)<span class="Special">\\</span>
+<span class="Special">[</span><span class="Statement">\neg</span>(<span class="Statement">\neg</span> p <span class="Statement">\lor</span> q) <span class="Statement">\lor</span> (p<span class="Statement">\land</span> <span class="Statement">\neg</span> q)<span class="Special">]</span> <span class="Special">&amp;</span><span class="Statement">\land</span> <span class="Special">[</span><span class="Statement">\neg</span>(p<span class="Statement">\land\neg</span> q)<span class="Statement">\lor</span>(<span class="Statement">\neg</span> p<span class="Statement">\lor</span> q)<span class="Special">]</span><span class="Special">\\</span>
+<span class="Special">[</span>(p<span class="Statement">\land</span> <span class="Statement">\neg</span> q) <span class="Statement">\lor</span> (p<span class="Statement">\land</span> <span class="Statement">\neg</span> q)<span class="Special">]</span> <span class="Special">&amp;</span><span class="Statement">\land</span> <span class="Special">[</span>(<span class="Statement">\neg</span> p<span class="Statement">\lor</span> q)<span class="Statement">\lor</span>(<span class="Statement">\neg</span> p<span class="Statement">\lor</span> q)<span class="Special">]</span><span class="Special">\\</span>
+(p<span class="Statement">\land\neg</span> q)<span class="Special">&amp;</span><span class="Statement">\land</span>(<span class="Statement">\neg</span> p <span class="Statement">\lor</span> q)<span class="Special">\\</span>
+p<span class="Statement">\land\neg</span> q<span class="Special">&amp;</span><span class="Statement">\land</span>(<span class="Statement">\neg</span> p<span class="Statement">\lor</span> q)<span class="Special">&amp;</span><span class="Statement">\text</span><span class="Special">{</span>KPN<span class="Special">}</span><span class="Special">\\</span>
+(p<span class="Statement">\land\neg</span> q)<span class="Special">&amp;</span><span class="Statement">\land</span>(<span class="Statement">\neg</span> p <span class="Statement">\lor</span> q)<span class="Special">\\</span>
+(<span class="Statement">\neg</span> p <span class="Statement">\land</span> p <span class="Statement">\land</span> <span class="Statement">\neg</span> q) <span class="Special">&amp;</span><span class="Statement">\lor</span> (q<span class="Statement">\land</span> p <span class="Statement">\land\neg</span> q)<span class="Special">&amp;</span><span class="Statement">\text</span><span class="Special">{</span>APN<span class="Special">}</span>
+<span class="Statement">\end</span><span class="Special">{</span><span class="PreProc">align*</span><span class="Special">}</span>
+
+<span class="PreProc">\section</span>*<span class="Special">{</span>Zadanie 3c<span class="Special">}</span>
+
+<span class="Statement">\begin</span><span class="Special">{</span><span class="PreProc">align*</span><span class="Special">}</span>
+p<span class="Statement">\land</span> q <span class="Special">&amp;</span><span class="Statement">\Rightarrow</span> r<span class="Special">\\</span>
+<span class="Statement">\neg</span>(p<span class="Statement">\land</span> q)<span class="Special">&amp;</span><span class="Statement">\lor</span> r<span class="Special">\\</span>
+<span class="Statement">\neg</span> p <span class="Statement">\lor</span> r <span class="Special">&amp;</span><span class="Statement">\lor</span> <span class="Statement">\neg</span> q <span class="Statement">\lor</span> r<span class="Special">\\</span>
+(<span class="Statement">\neg</span> p <span class="Statement">\lor</span> r) <span class="Special">&amp;</span><span class="Statement">\lor</span> (<span class="Statement">\neg</span> q <span class="Statement">\lor</span> r)<span class="Special">\\</span>
+(p<span class="Statement">\Rightarrow</span> r)<span class="Special">&amp;</span><span class="Statement">\lor</span>(q<span class="Statement">\Rightarrow</span> r)<span class="Special">&amp;</span><span class="Statement">\square</span>
+<span class="Statement">\end</span><span class="Special">{</span><span class="PreProc">align*</span><span class="Special">}</span>
+
+<span class="PreProc">\end{document}</span>
+</pre>
+</body>
+</html>
+<!-- vim: set foldmethod=manual : -->
