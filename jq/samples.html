@@ -1,0 +1,23 @@
+<title>jq samples</title>
+
+<h1><tt>jq</tt> samples</h1>
+
+<p><em>outputs adjusted formatting-wise for legibility and clarity</em></p>
+
+<h2 id="stringdigitsintarr">string of a number to array of digits as integers</h2>
+
+<pre><code>echo \"01230\" | jq 'split("")|map(tonumber)'</code></pre>
+
+<pre><samp>[ 0, 1, 2, 3, 0 ]</samp></pre>
+
+<h2 id="stringdigitsintarrplaceslittleendian">string of a number to array of object with the digits as integers and their positions from end</h2>
+
+<pre><code>echo \"01230\" | jq 'split("")|reverse|to_entries|reverse|map({key, value: .value | tonumber})'</code></pre>
+
+<pre><samp>
+[ { "key": 4, "value": 0 },
+  { "key": 3, "value": 1 },
+  { "key": 2, "value": 2 },
+  { "key": 1, "value": 3 },
+  { "key": 0, "value": 0 } ]
+</samp></pre>
