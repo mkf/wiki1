@@ -1,0 +1,28 @@
+<title>jq: prime decomposition ; on wiki1.mikf.pl from Rosetta code</title>
+
+<h1>jq: prime decomposition ; taken from Rosetta code</h1>
+
+<p>Just a verbatim mirror of <a href="https://rosettacode.org/wiki/Prime_decomposition#jq">
+  <samp>https://rosettacode.org/wiki/Prime_decomposition#jq</samp>
+</a></p>
+
+<blockquote cite="https://rosettacode.org/wiki/Prime_decomposition#jq">
+  <div class="examplemeta workswith"><b>Works with</b>: <a href="/wiki/Jq" title="Jq" class="mw-redirect">jq</a> version 1.4</div>
+<p>"factors" as defined below emits a stream of all the prime factors of the input integer.
+The implementation is compact, fast and highly space-efficient:
+no space is required to store the primes or factors already computed,
+there is no reliance on an "is_prime" function, and square roots are only computed if needed.
+</p><p>The economy comes about through the use of the builtin filter recurse/1,
+and the use of the state vector: [p, n, valid, sqrt],
+where p is the candidate factor, n is the number still to be factored,
+valid is a flag, and sqrt is either null or the square root of n.
+</p><p>The caveat is that the program uses jq's builtin arithmetic operations. Since
+jq currently uses IEEE 754 64-bit numbers, the following program will only be
+reliable for integers up to and including 9,007,199,254,740,992 (2^53). However, "factors"
+could be easily modified to work with a "BigInt" library for jq, such as <a rel="nofollow" class="external text" href="https://gist.github.com/pkoppstein/d06a123f30c033195841">BigInt.jq</a>.
+</p>
+<pre class="text highlighted_source">def factors:<br>  . as $in <br>  | [2, $in, false]<br>  | recurse( .[0] as $p |.[1] as $q | .[2] as $valid | .[3] as $s<br>             | if $q == 1        then empty<br>	       elif $q&nbsp;% $p == 0 then [$p, $q/$p, true]<br>               elif $p == 2      then [3, $q, false, $s]<br>               else<br>	         ($s // ($q | sqrt)) as $s<br>	         | if $p + 2 &lt;= $s then [$p + 2, $q, false, $s]<br>      	           else [$q, 1, true]<br>		   end<br>	       end )<br>   | if .[2] then .[0] else empty end&nbsp;;</pre>
+<p><b>Examples</b>:
+</p>
+<pre class="text highlighted_source">[9007199254740992 | factors] | length<br>#=&gt; 53<br>&nbsp;<br># 2**29-1 = 536870911<br>[ 536870911 | factors ]<br>&nbsp;<br>#=&gt; [233,1103,2089]</pre>
+</blockquote>
