@@ -26,3 +26,26 @@ could be easily modified to work with a "BigInt" library for jq, such as <a rel=
 </p>
 <pre class="text highlighted_source">[9007199254740992 | factors] | length<br>#=&gt; 53<br>&nbsp;<br># 2**29-1 = 536870911<br>[ 536870911 | factors ]<br>&nbsp;<br>#=&gt; [233,1103,2089]</pre>
 </blockquote>
+
+<h2>Usage example</h2>
+
+<pre><code>
+echo \"0124\" | jq <strong>'''</strong>
+<em>def factors:
+  . as $in
+  | [2, $in, false]
+  | recurse( .[0] as $p |.[1] as $q | .[2] as $valid | .[3] as $s
+             | if $q == 1        then empty
+        elif $q % $p == 0 then [$p, $q/$p, true]
+               elif $p == 2      then [3, $q, false, $s]
+               else
+          ($s // ($q | sqrt)) as $s
+          | if $p + 2 <= $s then [$p + 2, $q, false, $s]
+                  else [$q, 1, true]
+     end
+        end )
+   | if .[2] then .[0] else empty end ;
+
+tonumber | [factors]</em>
+<strong>'''</strong>
+</code></pre>
