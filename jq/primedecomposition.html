@@ -30,8 +30,10 @@ could be easily modified to work with a "BigInt" library for jq, such as <a rel=
 <h2>Usage example</h2>
 
 <pre><code>
-echo \"0124\" | jq <strong>'''</strong>
-<em>def factors:
+echo \"0124\" | jq <strong style="
+  background-color: red;
+">'''</strong><span style="color: ultramarine; background-color: lightgray;">
+def factors:
   . as $in
   | [2, $in, false]
   | recurse( .[0] as $p |.[1] as $q | .[2] as $valid | .[3] as $s
@@ -46,6 +48,8 @@ echo \"0124\" | jq <strong>'''</strong>
         end )
    | if .[2] then .[0] else empty end ;
 
-tonumber | [factors]</em>
-<strong>'''</strong>
+tonumber | [factors]
+</span><strong style="
+  background-color: red;
+">'''</strong>
 </code></pre>
