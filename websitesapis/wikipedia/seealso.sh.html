@@ -26,6 +26,8 @@ pre {
 
 <h1>A script for getting a Wikipedia article's <q>See also</q></h1>
 
+<h2>using MediaWiki Parsing API efficiently</h2>
+
 <pre id='vimCodeElement'>
 <span class="Comment">#!/usr/bin/env bash</span>
 <span class="Identifier">title</span>=<span class="Statement">&quot;</span><span class="PreProc">$(</span><span class="Statement">echo</span><span class="Constant"> </span><span class="Statement">&quot;</span><span class="PreProc">$1</span><span class="Statement">&quot;</span><span class="Constant"> </span><span class="Statement">|</span><span class="Special"> jq </span><span class="Special">-Rr</span><span class="Special"> </span><span class="Statement">'</span><span class="Constant">@uri</span><span class="Statement">'</span><span class="PreProc">)</span><span class="Statement">&quot;</span>
