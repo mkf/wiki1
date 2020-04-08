@@ -1,0 +1,32 @@
+<title>jq: last preceding not-satisfying elem : wiki1.mikf.pl</title>
+
+<h1>jq: last preceding not-satisfying element</h1>
+
+<pre><span style="color: darkgray;">
+# made by Michał Krzysztof Feiler, published: https://wiki1.mikf.pl/jq/preceding.html
+</span><code>def lastforeach(pred; proc):
+  reduce .[] as $item ({last: null, results: []};
+  {last: (if $item | pred then .last else $item end),
+   results: (.results +
+  if $item | pred then [({last: .last, cur: $item} | proc)] else [] end)})
+  | .results ;
+</code></pre>
+
+<p>the function (filter) above, given:</p>
+
+<ul>
+  <li>as input, an array of certain kind of elements</li>
+  <li>as <tt>pred</tt> parameter, a predicate on the kind of elements
+  (i.e. a function (filter) returning boolean given a value from the array)</li>
+  <li>as <tt>proc</tt> parameter, a filter (function) that will
+  act on an object with fields <tt>last</tt> and <tt>cur</tt></li>
+</ul>
+
+<p>returns an array of
+  <em>objects <code>{last, cur}</code> piped through <tt>proc</tt></em>,
+  with the <tt>last</tt> being the last non-<tt>pred</tt>-satisfying element
+  preceding the (each) <tt>pred</tt>-atisfying element <tt>cur</tt>.
+</p>
+
+<p>To make things simpler and instead post-process (or not?) the resulting array of
+<code>{last, cur}</code>, just provide <q><code>.</code></q> as <tt>proc</tt>.</p>
