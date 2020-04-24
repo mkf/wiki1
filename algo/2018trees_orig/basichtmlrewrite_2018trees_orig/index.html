@@ -1,0 +1,453 @@
+  <style>
+    div.ams {
+      display: inline-block;
+    }
+  </style>
+
+<h1>Metody drzew AVL i niedokończone czerwono-czarnych</h1>
+<h2>Równoważenie binarnych drzew przeszukiwania metodą drzew AVL,
+  i miało być jeszcze metodą drzew wagowo zrównoważonych
+  i metodą drzew czerwono-czarnych</h2>
+<h3><em>prezentowane przez MKF dnia 14 maja 2018 roku na zaj.
+z Algorytmów i Struktur Danych gr. ćw. LJ* na WMiI UMK w ramach
+zaliczenia</em></h3>
+
+<p>Nota po latach: <br>
+  Prezentacja zawiera wiele błędów i generalnie jest zła. Ostrożnie z nią.</p>
+  <hr>
+
+<h2>Wstęp</h2>
+<h3>Problem tablic asocjatywnych uporządkowanych</h3>
+<p>Problem implementacji tablic asocjatywnych, a więc, optymalnej struktury danych dla
+    zbioru wartości typu <var>V</var> mając funkcję klucza
+    <div class="ams"><var>k</var> : <var>V</var> → <var>K</var></div>
+    (różnowartościową lub nie (wielozbiór kluczy)),
+    gdzie <var>K</var> jest pewnym typem klucza, pod kątem
+    efektywnego znajdowania wartości po kluczu,
+    tzn. po odpowiadającej im wartości funkcji <var>k</var>.
+
+<p>Problem implementacji tablic asocjatywnych uporządkowanych, a więc rozszerzenie
+    problemu tablicowania o zagadnienie optymalizacji pod kątem odwiedzania
+    elementów w porządku, mając dodatkowo relację porządku liniowego <var>≤</var>
+    na <var>K</var> &mdash; która gdy złożona z <var>k</var> tworzy relację na <var>V</var>:
+    <ul>
+      <li>spójnego praporządku <var>≲</var> (przechodnią, spójną, i zwrotną) (<var>k</var>
+        nie musi być injekcją, jest multizbiór kluczy)
+      <li>która, jeśli <var>k</var> injekcją, jest również porządkiem liniowym
+    (dodatkowo słabo antysymetryczną) (tylko zbiór kluczy).
+    </ul>
+
+<h3>Problem implementacji typu zbiorowego i wielozbiorowego</h3>
+
+<p>Problem implementacji typu zbiorowego lub multizbiorowego uporządkowanego,
+a więc, optymalnej struktury danych dla zbioru wartości typu <var>V</var>
+mając relację spójnego praporządku <var>≲</var> na <var>V</var>
+(przechodnią, spójną i zwrotną) (w przypadku typu zbiorowego, <var>≲</var>
+jest również porządkiem liniowym &mdash; dodatkowo słabo antysymetryczną &mdash;)
+pod kątem odwiedzania elementów w porządku
+(a także, w przypadku typu zbiorowego, efektywnego pomijania duplikatów przy dodawaniu
+wartości do struktury).
+
+<p>Jeżeli mamy też pewną funkcję
+  <div class="ams"><var>k</var> : <var>V</var> → <var>K</var></div>,
+  gdzie <var>K</var> jest pewnym typem na którym mamy określony pewien porządek liniowy
+  <var>≤</var>, który złożony z <var>k</var> jest równoważny <var>≲</var>,
+  problem można sprowadzić do problemu implementacji tablic asocjatywnych uporządkowanych.
+
+<h3>Drzewa przeszukiwania</h3>
+  <p>Drzewa przeszukiwania są jednym z rozwiązań
+problemu implementacji tablic asocjatywnych uporządkowanych
+lub typów (wielo)zbiorowych.
+<p>Są to struktury&ndash;drzewa z parametryzacją rozmieszczenia poziomego (uporządkowane),
+  <ul>
+    <li>która jest unikalna na zbiorze poddrzew danego węzła,</li>
+    <li>dla której wartości ustalona spójna relacja porządku
+implikuje relację <var>≲</var> zarówno dla wierzchołków poddrzew
+po odpowiednich stronach jak i dla pozostałych wartości w danym węźle
+(czyli relację <var>≤</var> dla kluczy).</li>
+  </ul>
+
+<h3>Binarne drzewa przeszukiwania</h3>
+
+<p>Najprostszą odmianą drzew przeszukiwania są binarne drzewa przeszukiwania (BST).
+Są to drzewa przeszukiwania, w których
+
+<ul>
+  <li>węzły drzewa zawierają tylko jedną wartość,</li>
+  <li>mają każdy od zera do dwóch poddrzew,</li>
+  <li>ich parametryzacja rozmieszczenia poziomego jest
+    <ul>
+      <li>dwuwartościowa (boolowska)</li>
+      <li>o wartości spełniającej implikację zachodzenia relacji <var>≲</var>
+      między wartościami danego węzła a wierzchołka danego jego poddrzewa
+      <ul>
+        <li>jeżeli <var>≲</var> jest porządkiem liniowym to równej
+          zachodzeniu relacji <var>≲</var></li>
+        <li>wówczas również, przez przechodniość tej relacji,
+          zachodzeniu relacji <var>≲</var> również z pozostałym poddrzewem,
+          jeżeli są dwa pod danym węzłem.</li>
+      </ul>
+    </li>
+    </ul>
+  </li>
+</ul>
+
+<h4>Działania na BST</h4>
+
+<h5>Struktury algebraiczne</h5>
+
+<p>Przedstawmy drzewo BST jako typ algebraiczny</p>
+<pre>
+  class <var>POrd</var> <var>K</var> where (<var>≤</var>) : <var>K</var> → <var>K</var> → <var>Bool</var>
+  class <var>TPreOrd</var> <var>V</var> where (<var>≲</var>) : <var>V</var> → <var>V</var> → <var>Bool</var>
+  class (<var>TPreOrd</var> <var>V</var>, <var>POrd</var> <var>K</var>) ) ⇒ <var>NodeVal</var> <var>V</var> <var>K</var> where <var>k</var> : <var>V</var> → <var>K</var>
+
+
+  type <var>TwoSub</var> <var>V</var> <var>K</var> = (<var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>) , <var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>))
+  data <var>Node</var> <var>V</var> <var>K</var> where
+    <var>Node</var> : (<var>NodeVal</var> <var>V</var> <var>K</var>) ⇒ <var>V</var> → <var>TwoSub</var> <var>V</var> <var>K</var> → <var>Node</var> <var>V</var> <var>K</var>
+</pre>
+
+<h5>Znajdowanie po kluczu oraz traversal</h5>
+
+<pre>
+  <var>get</var> : (<var>Eq</var> <var>K</var>) ⇒ <var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>) → <var>K</var> → [<var>V</var>]
+  <var>get</var> <var>Nothing</var> <var>_</var> = []
+  <var>get</var> (<var>Just</var> (<var>Node</var> <var>t</var> (<var>l</var>, <var>p</var>))) <var>x</var> =
+    [<var>t</var> | <var>k</var> <var>t</var> == <var>x</var>] ⧺ (<var>get</var> (if <var>x</var> <var>≤</var> <var>k</var> <var>t</var> then <var>l</var> else <var>p</var>) <var>x</var>)
+  <var>list</var> : <var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>) → [<var>V</var>]
+  <var>list</var> <var>Nothing</var> = []
+  <var>list</var> (<var>Just</var> (<var>Node</var> <var>t</var> (<var>l</var>, <var>p</var>)) = <var>list</var> <var>l</var> ⧺ [<var>t</var>] ⧺ <var>list</var> <var>p</var>
+</pre>
+
+<h5>Wstawianie</h5>
+
+<pre>
+  <var>insert</var> : (<var>NodeVal</var> <var>V</var> <var>K</var>) ⇒ <var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>) → <var>v</var> → <var>Node</var> <var>V</var> <var>K</var>
+  <var>insert</var> <var>Nothing</var> <var>x</var> = <var>Node</var> <var>x</var> (<var>Nothing</var>, <var>Nothing</var>)
+  <var>insert</var> (<var>Just</var> (<var>Node</var> <var>t</var> (<var>l</var>, <var>p</var>))) <var>x</var> =
+    --| <var>x</var> <var>≲</var> <var>t</var> ∧ <var>t</var> <var>≲</var> <var>x</var> = <var>Node</var> <var>t</var> (<var>l</var>, <var>p</var>)   -- el. duplikatów
+      | <var>x</var> <var>≲</var> <var>t</var> = <var>Node</var> <var>t</var> (<var>Just</var> (<var>insert</var> <var>l</var> <var>x</var>), <var>p</var>)
+      | otherwise = <var>Node</var> <var>t</var> (<var>l</var>, (<var>Just</var> (<var>insert</var> <var>p</var> <var>x</var>))
+</pre>
+
+<h5><tt>popLeftMost</tt></h5>
+
+<pre>
+  type <var>PopFun</var> <var>V</var> <var>K</var> = <var>Node</var> <var>V</var> <var>K</var> → (<var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>), <var>V</var>)
+  <var>popLeftMost</var> : <var>PopFun</var> <var>V</var> <var>K</var>
+  <var>popLeftMost</var> (<var>Node</var> t (<var>Nothing</var> , <var>p</var>)) = (<var>p</var>, <var>t</var>)
+  <var>popLeftMost</var> (<var>Node</var> t (<var>Just</var> <var>l</var> , <var>p</var>)) =
+    let (<var>n</var>, <var>v</var>) = <var>popLeftMost</var> <var>l</var> in (<var>Just</var> (<var>Node</var> t (<var>l</var>, <var>n</var>)) , <var>v</var>)
+  <var>popRightMost</var> : <var>PopFun</var> <var>V</var> <var>K</var>
+  <var>popRightMost</var> (<var>Node</var> t (<var>l</var> , <var>Nothing</var>)) = (<var>l</var>, <var>t</var>)
+  <var>popRightMost</var> (<var>Node</var> t (<var>l</var> , <var>Just</var> <var>p</var>)) =
+    let (<var>n</var>, <var>v</var>) = <var>popRightMost</var> <var>p</var> in (<var>Just</var> (<var>Node</var> t (<var>n</var>, <var>p</var>)) , <var>v</var>)
+</pre>
+
+<h5><tt>popDeeperOneOffTop</tt></h5>
+
+<pre>
+  <var>popDeeperOneOffTop</var> : <var>PopFun</var> <var>V</var> <var>K</var>
+  <var>popDeeperOneOffTop</var> (<var>Node</var> <var>t</var> <var>Nothing</var> <var>Nothing</var>) = (<var>Nothing</var> , <var>t</var>)
+  <var>popDeeperOneOffTop</var> (<var>Node</var> <var>t</var> <var>l</var> <var>p</var>) =
+    let ((<var>n<sub>l</sub></var>, <var>n<sub>p</sub></var>), <var>v</var>) = <var>_popDeeperOneOff</var> (<var>l</var>, <var>p</var>) in (<var>Just</var> (<var>Node</var> <var>t</var> <var>n<sub>l</sub></var> <var>n<sub>p</sub></var>))
+  <var>_popDeeperOneOff</var> : <var>TwoSub</var> <var>V</var> <var>K</var> → (<var>TwoSub</var> <var>V</var> <var>K</var>, <var>V</var>)
+  <var>_popDeeperOneOff</var> (<var>Just</var> (<var>Node</var> <var>t<sub>l</sub></var> (<var>o<sub>l</sub></var>, <var>l</var>)), <var>Just</var> (<var>Node</var> <var>t<sub>p</sub></var> (<var>p</var>, <var>o<sub>p</sub></var>)) =
+    let ((<var>n<sub>l</sub></var>, <var>n<sub>p</sub></var>), <var>v</var>) = <var>_popDeeperOneOff</var> (<var>l</var>, <var>p</var>) in
+      (<var>Just</var> (<var>Node</var> <var>t<sub>l</sub></var> (<var>o<sub>l</sub></var>, <var>n<sub>l</sub></var>)), <var>Just</var> (<var>Node</var> <var>t<sub>p</sub></var> (<var>n<sub>p</sub></var>, <var>o<sub>p</sub></var>)))
+  <var>_popDeeperOneOff</var> (<var>Just</var> <var>l</var>, <var>Nothing</var>) =
+    let (<var>n</var>, <var>v</var>) = <var>popRightMost</var> <var>l</var> in ((<var>n</var>, <var>Nothing</var>), <var>v</var>)
+  <var>_popDeeperOneOff</var> (<var>Nothing</var>, <var>Just</var> <var>p</var>) =
+    let (<var>n</var>, <var>v</var>) = <var>popLeftMost</var> <var>p</var> in ((<var>Nothing</var>, <var>n</var>), <var>v</var>)
+  <var>_popDeeperOneOff</var> (<var>Nothing</var>, <var>Nothing</var>) = undefined
+</pre>
+
+<h5>Usuwanie elementów po kluczu</h5>
+
+<pre>
+  <var>delete</var> : (<var>Eq</var> <var>K</var>) ⇒ <var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>) → <var>K</var> → <var>Maybe</var> (<var>Node</var> <var>V</var> <var>K</var>)
+  <var>delete</var> <var>Nothing</var> <var>_</var> = <var>Nothing</var>
+  <var>delete</var> (<var>Just</var> (<var>Node</var> <var>t</var> (<var>l</var>, <var>p</var>))) <var>x</var>
+        | <var>k</var> <var>t</var> == <var>x</var> ∧ <var>isNothing</var> <var>l</var> = <var>delete</var> <var>p</var> <var>x</var>
+        | <var>k</var> <var>t</var> == <var>x</var> ∧ <var>isNothing</var> <var>p</var> = <var>delete</var> <var>l</var> <var>x</var>
+        | <var>k</var> <var>t</var> == <var>x</var> = <var>flip</var> <var>delete</var> <var>x</var> $ <var>Just</var> $
+           let ((<var>n<sub>l</sub></var>, <var>n<sub>p</sub></var>), <var>v</var>) = <var>_popDeeperOneOff</var> (<var>l</var>, <var>p</var>)
+             in <var>Node</var> <var>v</var> (<var>n<sub>l</sub></var>, <var>n<sub>p</sub></var>)
+</pre>
+
+<h3>Niezrównoważone drzewa są nieefektywne</h3>
+
+<figure>
+  <img src="fivestraightright.svg">
+  <figcaption>Niezbalansowane BST sekwencji kilku kolejnych liczb nat.</figcaption>
+</figure>
+
+<h2>Drzewa AVL</h2>
+
+<h3>Definicja</h3>
+
+<ul>
+  <li>Drzewo AVL, od nazwisk Gieorgia Adelson-Wielskiego oraz Jewgienija Łandisa,
+    którzy wynaleźli algorytm i opublikowali go w 1962.</li>
+<li>Miarą zrównoważenia drzewa jest tzw. współczynnik wyważenia drzewa, określany jak
+o różnica wysokości prawego poddrzewa i lewego poddrzewa.</li>
+<li>Drzewo BST jest drzewem AVL, jeżeli współczynnik wyważenia drzewa nie jest oddalony od zera o więcej niż 1.</li>
+<li>Podtrzymywanie spełniania tej definicji polega na równoważeniu drzewa po każdym wstawieniu i usunięciu.</li>
+</ul>
+
+<h3>Pojedyńcza rotacja w lewo</h3>
+
+<p>gdy mamy poddrzewo, którego prawe poddrzewo jest wyższe</p>
+
+<ol>
+  <li>niech <var>X</var> = wartość wierzchołka naszego</li>
+  <li>niech <var>Z</var> = wartość wierzchołka prawego</li>
+  <li>niech lewe poddrzewo naszego to będzie <var>a</var></li>
+  <li>niech lewe poddrzewo prawego to będzie <var>b</var></li>
+  <li>niech prawe poddrzewo prawego to będzie <var>c</var></li>
+  <figure><img src="xzabc.svg"></figure>
+  <li>to wynik pojedyńczej rotacji w lewo to będzie</li>
+  <figure><img src="zxcab.svg"></figure>
+  <li>jeżeli było AVL i zostało coś usunięte z <var>a</var>,
+    i <var>b</var> i <var>c</var> tak samo wysokie to zapiszmy że teraz
+    dla <var>X</var> <var>+1</var> a dla <var>Z</var> <var>-1</var>.
+    Otherwise oba zero.
+  </li>
+</ol>
+
+<h3>Podwójna rotacja prawo-lewo</h3>
+
+<ul>
+  <li>No ale mamy ddrzewo, którego prawe jest wyższe</li>
+  <li>i tego prawego poddrzewa lewe poddrzewo jest wyższe</li>
+  <li>jadąc od góry tylko obrócilibyśmy sobie sytuację</li>
+  <li>dlatego trzeba odwrócić piętro niżej</li>
+  <li>i następnie obrócić nasze</li>
+  <li>teraz:
+  <ul>
+    <li>jeżeli podpod było prawo-wyższe to teraz to o wierzchołku naszego
+      (które jest lewym pod) jest -1,
+      a to o wierzchołku prawego pod (które jest prawego pod) jest 0</li>
+    <li>jeżeli podpod było na zero to teraz dwa ww są na zero oba</li>
+    <li>a jak było lewo-wyższe to jest odwrotnie co w prawo-wyższe
+      i na plus a nie na minus</li>
+  </ul>
+  </li>
+</ul>
+
+<h2>B-drzewa</h2>
+
+<p>pokrótce.</p>
+
+<h3>Ogólnik</h3>
+
+<p>B-drzewa (znaczenie <em>B</em> jest nieustalone) są poniekąd uogólnieniem BST.
+    Są do drzewa przeszukiwania, w których:</p>
+
+<ul>
+  <li>węzły zawierają od <var>d</var> do <var>2d</var> wartości, gdzie
+  <div class="ams"><var>d</var> &in; 	ℕ<sup>+</sup></div> ustalone</li>
+  <li>jeżeli dany węzeł zawiera <var>n</var> wartości, to ma <var>n+1</var> poddrzew</li>
+  <li>ich parametryzacja rozmieszczenia poziomego jest
+  <ul>
+    <li><var>n</var>-wartościowa, z ustalonym dla tych wartości ostrym porządkiem
+      liniowym <var>&lt;</var>
+      przy czym dla każdych dwóch elementów zbioru wartości parametryzacji
+      <var>n+1</var>-wartościowej wartość znajdująca się w zb. w. parametryzacji
+      <var>n</var>-wartościowej będzie zawsze w relacji <var>&lt;</var> z
+      wartością która się w nim nie znajduje
+    </li>
+  </ul>
+  </li>
+</ul>
+
+<h3>Definicja wg Knutha</h3>
+
+<ul>
+  <li>rząd B-drzewa w sensie Knutha określa się jako <var>2d</var></li>
+  <li>dla ułatwienia nazywa się je czasem drzewami <var>d</var>&ndash;<var>2d</var></li>
+  <li>termin <em>liść</em> w sensie ogólnym oznacza
+        węzeł bez poddrzew, ale w sensie Knutha liście są dopiero
+        poniżej najniższych węzłów</li>
+  <li>bardziej precyzyjnie, węzłów wewnętrznych
+        (nie mylić z podwęzłami)</li>
+  <li>podwęzłami czyli poszczególnymi wartościami w węźłach<br><br></li>
+  <li>wymaganie: wszystkie liście na tej samej głębokości</li>
+</ul>
+
+<h3>Rozróżnienie liści</h3>
+
+<ul>
+  <li>można zastosować podejście w którym z wartości nie da się
+wydobyć kluczy</li>
+  <li>wówczas klucze znajdują się w węzłach wewnętrznych\\
+a wartości w liściach</li>
+  <li>wówczas kluczem danej wartości jest klucz w podwęźle separującym z prawej
+  (niejako traktuje się je razem jako wartość z wspomnianej wcześniej definicji)</li>
+  <li>jeżeli to rightmost liść,
+  to kluczem jest prawy podwęzeł separujący w węźle wyżej, itd.,
+  a w całym drzewie rightmost podwęzeł rightmost węzła ma po prawej liść <tt>NIL</tt>
+</li>
+</ul>
+
+<h3>Implementacja</h3>
+
+  <style>
+      .leftborder {
+        border-left: 1px solid #CCC;
+        border-bottom: 1px solid #CCC;
+        border-right: 1px solid #DDD;
+        border-top: 1px solid #EEE;
+        padding: 0.8em;
+        display: inline-block;
+        vertical-align: middle;
+      }
+  </style>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style>
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+<div class="leftborder sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="pp">#define E 1</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="pp">#define EM (E + 1)</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="pp">#define EMP (EM + 1)</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="pp">#define D (1 &lt;&lt; E)</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="pp">#define DP (D + 1)</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="pp">#define DM (1 &lt;&lt; EM)</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="pp">#define DMP (DM + 1)</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">typedef</span> <span class="kw">struct</span> Val {</span>
+<span id="cb1-11"><a href="#cb1-11"></a>    <span class="dt">short</span> <span class="dt">unsigned</span> len;</span>
+<span id="cb1-12"><a href="#cb1-12"></a>    <span class="dt">char</span> *s;</span>
+<span id="cb1-13"><a href="#cb1-13"></a>} V;</span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="kw">typedef</span> <span class="dt">unsigned</span> K;</span></code></pre></div>
+<div class="leftborder sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">struct</span> intnode {</span>
+<span id="cb2-2"><a href="#cb2-2"></a>    K ks[DM];</span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="dt">unsigned</span> kn : EM;</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="dt">void</span>* s[DMP];</span>
+<span id="cb2-5"><a href="#cb2-5"></a>};</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="kw">union</span> either {</span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="kw">struct</span> intnode i;</span>
+<span id="cb2-8"><a href="#cb2-8"></a>    V l;</span>
+<span id="cb2-9"><a href="#cb2-9"></a>};</span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="kw">struct</span> node {</span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="dt">unsigned</span> is_leaf : <span class="dv">1</span>;</span>
+<span id="cb2-12"><a href="#cb2-12"></a>    <span class="kw">union</span> either n;</span>
+<span id="cb2-13"><a href="#cb2-13"></a>};</span></code></pre></div>
+<div class="leftborder sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">struct</span> location {</span>
+<span id="cb3-2"><a href="#cb3-2"></a>    <span class="kw">struct</span> intnode *which;</span>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="dt">unsigned</span> where : EM;</span>
+<span id="cb3-4"><a href="#cb3-4"></a>};</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">struct</span> traversal {</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    <span class="kw">struct</span> location *loc;</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    <span class="dt">size_t</span> depth;</span>
+<span id="cb3-8"><a href="#cb3-8"></a>};</span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="kw">struct</span> traversal new_traversal(<span class="kw">struct</span> intnode *w) {</span>
+<span id="cb3-10"><a href="#cb3-10"></a>    <span class="kw">struct</span> traversal r;</span>
+<span id="cb3-11"><a href="#cb3-11"></a>    r.depth = <span class="dv">1</span>;</span>
+<span id="cb3-12"><a href="#cb3-12"></a>    r.loc = malloc(<span class="kw">sizeof</span>(<span class="kw">struct</span> location));</span>
+<span id="cb3-13"><a href="#cb3-13"></a>    r.loc-&gt;which = w;</span>
+<span id="cb3-14"><a href="#cb3-14"></a>    r.loc-&gt;where = <span class="dv">0</span>;</span>
+<span id="cb3-15"><a href="#cb3-15"></a>    <span class="cf">return</span> r;</span>
+<span id="cb3-16"><a href="#cb3-16"></a>}</span></code></pre></div>
+<div class="leftborder sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">struct</span> traversal begin_traversal(    <span class="kw">struct</span> traversal t,</span>
+<span id="cb4-2"><a href="#cb4-2"></a>                                     <span class="dt">unsigned</span> copy  ) {</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="kw">struct</span> traversal r = t;</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="dt">size_t</span> much = <span class="kw">sizeof</span>(<span class="kw">struct</span> location)*r.depth;</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="kw">struct</span> location l = r.loc[r.depth-<span class="dv">1</span>];</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="cf">if</span>(!((<span class="kw">struct</span> node*)(l.which-&gt;s[l.where]))-&gt;is_leaf) {</span>
+<span id="cb4-7"><a href="#cb4-7"></a>        <span class="cf">if</span>(copy) {    r.loc = malloc(much);</span>
+<span id="cb4-8"><a href="#cb4-8"></a>                      memcpy(r.loc, t.loc, much);   }</span>
+<span id="cb4-9"><a href="#cb4-9"></a>        much+=<span class="kw">sizeof</span>(<span class="kw">struct</span> location);</span>
+<span id="cb4-10"><a href="#cb4-10"></a>        r.loc = realloc(r.loc, much);</span>
+<span id="cb4-11"><a href="#cb4-11"></a>        r.loc[r.depth].which = l.which-&gt;s[l.where];</span>
+<span id="cb4-12"><a href="#cb4-12"></a>        r.loc[r.depth].where = <span class="dv">0</span>;</span>
+<span id="cb4-13"><a href="#cb4-13"></a>        r.depth+=<span class="dv">1</span>;</span>
+<span id="cb4-14"><a href="#cb4-14"></a>        r = begin_traversal(r, <span class="dv">0</span>);  }</span>
+<span id="cb4-15"><a href="#cb4-15"></a>    <span class="cf">return</span> r;</span>
+<span id="cb4-16"><a href="#cb4-16"></a>}</span></code></pre></div>
+<div class="leftborder sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">struct</span> traversal walk(<span class="kw">struct</span> traversal t, <span class="dt">unsigned</span> copy) {</span>
+<span id="cb5-2"><a href="#cb5-2"></a>    <span class="kw">struct</span> traversal r = t;</span>
+<span id="cb5-3"><a href="#cb5-3"></a>    <span class="dt">size_t</span> much = <span class="kw">sizeof</span>(<span class="kw">struct</span> location)*r.depth;</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="cf">if</span>(copy) {    r.loc = malloc(much);</span>
+<span id="cb5-5"><a href="#cb5-5"></a>                  memcpy(r.loc, t.loc, much);   }</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="kw">struct</span> location l = r.loc[r.depth-<span class="dv">1</span>];</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="cf">do</span> {    <span class="cf">if</span>(l.which-&gt;kn&gt;l.where) {</span>
+<span id="cb5-8"><a href="#cb5-8"></a>                r.loc[r.depth-<span class="dv">1</span>].where++;</span>
+<span id="cb5-9"><a href="#cb5-9"></a>                <span class="cf">break</span>;          }</span>
+<span id="cb5-10"><a href="#cb5-10"></a>            r.depth--;</span>
+<span id="cb5-11"><a href="#cb5-11"></a>            l = r.loc[r.depth-<span class="dv">1</span>];</span>
+<span id="cb5-12"><a href="#cb5-12"></a>    } <span class="cf">while</span> (r.depth&gt;<span class="dv">0</span>);</span>
+<span id="cb5-13"><a href="#cb5-13"></a>    r = begin_traversal(r, <span class="dv">0</span>);</span>
+<span id="cb5-14"><a href="#cb5-14"></a>    <span class="cf">return</span> r;</span>
+<span id="cb5-15"><a href="#cb5-15"></a>}</span></code></pre></div>
+
+<h3>Wstawianie</h3>
+<ul><li>.</li></ul>
