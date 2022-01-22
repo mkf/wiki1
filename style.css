@@ -1,0 +1,4 @@
+body {
+    font-size: clamp(1em, 2vw, 12em);
+    max-width: 70em;
+}
