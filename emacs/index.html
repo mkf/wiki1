@@ -1,0 +1,503 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,
+      initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="author" content="Mika Feiler">
+    <title>on Emacs - wiki1.mikf.pl</title>
+    <meta name="description" content="">
+  </head>
+  <body>
+    <h1>on Emacs</h1>
+    <h2>an opinionated chaotic draft cheatsheet</h2>
+    <h3>general</h3>
+    <table cellpadding="2" width="100%" cellspacing="2" border="1">
+      <tbody>
+        <tr>
+          <td valign="top"><font size="+1"><tt>C-x k</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>kill-buffer</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><font size="+1"><tt>C-_</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>undo</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-v, PUp</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>scroll-up-command</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>M-v,
+                PDown</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>scroll-down-command</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>M-d</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>kill-word</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>M-Bspc</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>kill-word-backwards</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-w</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>kill-region</tt><tt><br>
+            </tt></td>
+          <td valign="top">(cut)<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>M-w</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>kill-ring-save</tt><tt><br>
+            </tt></td>
+          <td valign="top">(copy region)<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-y</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>yank</tt><tt><br>
+            </tt></td>
+          <td valign="top">(paste)<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>M-y</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>yank-pop</tt><tt><br>
+            </tt></td>
+          <td valign="top">cycle the yank with the kill ring, after a
+            yank[-pop]<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-x h</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>mark-whole-buffer</tt><tt><br>
+            </tt></td>
+          <td valign="top">(select all)<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-s</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>isearch-forward</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-r</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>isearch-backward</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><strong><font size="+1"><tt>C-h
+                  c</tt><tt><br>
+                </tt></font></strong></td>
+          <td valign="top"><strong><tt>describe-key-briefly</tt></strong><strong><tt><br>
+              </tt></strong></td>
+          <td valign="top">(because <code>M-x describe-key</code> opens
+            a buffer)<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-h<br>
+          </td>
+          <td valign="top">mark-paragraph<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-@<br>
+          </td>
+          <td valign="top">mark-word<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-M-h<br>
+          </td>
+          <td valign="top">mark-defun<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-M-@<br>
+            C-M-Spc<br>
+          </td>
+          <td valign="top">mark-sexp<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><strike>C-Spc</strike><strike><br>
+            </strike></td>
+          <td valign="top"><strike>set-mark-command</strike><strike><br>
+            </strike></td>
+          <td valign="top"><strike>???</strike><strike><br>
+            </strike></td>
+        </tr>
+        <tr>
+          <td valign="top">C-x Spc<br>
+          </td>
+          <td valign="top">rectangle-mark-mode<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><strike>M-Spc</strike><strike><br>
+            </strike></td>
+          <td valign="top"><strike>just-one-space</strike><strike><br>
+            </strike></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-f<br>
+          </td>
+          <td valign="top">forward-word<br>
+          </td>
+          <td rowspan="2" colspan="1" valign="top">(sub)word<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-b<br>
+          </td>
+          <td valign="top">backward-word<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-d<br>
+          </td>
+          <td valign="top">kill-word<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-Del<br>
+          </td>
+          <td valign="top">backward-kill-word<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-t<br>
+          </td>
+          <td valign="top">transpose-words<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-c<br>
+          </td>
+          <td valign="top">capitalize-word<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-u<br>
+          </td>
+          <td valign="top">upcase-word<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-l<br>
+          </td>
+          <td valign="top">downcase-word<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">query-replace<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">dired-do-query-replace<br>
+          </td>
+          <td valign="top">(in dired, Q) - interactive find&amp;replace
+            on marked files in dired<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>CC mode</h3>
+    <table cellpadding="2" width="100%" cellspacing="2" border="1">
+      <tbody>
+        <tr>
+          <td valign="top" nowrap="nowrap"><tt><font size="+1">TAB<br>
+              </font></tt></td>
+          <td valign="top" nowrap="nowrap"><tt>c-indent-command<br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><tt><font size="+1">C-j<br>
+              </font></tt></td>
+          <td valign="top" nowrap="nowrap"><tt>newline-and-indent<br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><tt><font size="+1">C-M-q<br>
+              </font></tt></td>
+          <td valign="top" nowrap="nowrap"><tt>c-indent-exp<br>
+            </tt></td>
+          <td valign="top"><font size="-1">Indents entire balanced brace
+              or parenthesis expression. Point must be on opening brace
+              or parenthesis of the expression you want to indent</font>.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><tt><font size="+1">C-c C-q<br>
+              </font></tt></td>
+          <td valign="top" nowrap="nowrap"><tt>c-indent-defun<br>
+            </tt></td>
+          <td valign="top"><font size="-1">Indents entire top-level
+              function, class or macro definition encompassing point. It
+              leaves point unchanged. Can't be used to reindent nested
+              brace construct such as function. The top level construct
+              must be complete, i.e. have both beginning and ending
+              brace.<br>
+            </font></td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><font size="+1">C-M-\<br>
+              </font></tt></td>
+          <td valign="top"><tt>indent-region<br>
+            </tt></td>
+          <td valign="top">Indents arbitrary region of code.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><font size="+1"><tt>C-M-h</tt></font><tt><br>
+            </tt></td>
+          <td valign="top"><tt>c-mark-function</tt><tt><br>
+            </tt></td>
+          <td valign="top"><font size="-1">mark current top-level
+              function as current region. As with c-indent-defun,
+              operates on <em>top level</em>.</font><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><font size="+1"><tt>C-c C-c</tt><br>
+            </font></td>
+          <td valign="top"><tt>comment-region</tt><br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>M-<strong>-</strong>
+                C-c C-c</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>uncomment-region</tt><tt><br>
+            </tt></td>
+          <td valign="top"><var>probably</var><var><br>
+            </var></td>
+        </tr>
+        <tr>
+          <td valign="top" nowrap="nowrap"><font size="+1"><tt>C-u C-c
+                C-c</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>uncomment-region</tt><tt><br>
+            </tt></td>
+          <td valign="top"><var>probably</var><var><br>
+            </var></td>
+        </tr>
+        <tr>
+          <td valign="top"><font size="+1"><tt>M-;</tt><tt><br>
+              </tt></font></td>
+          <td valign="top"><tt>comment</tt><tt><br>
+            </tt></td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><font size="+1"><tt>C-u M-;</tt><br>
+            </font></td>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">kills any comment on current line<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-M-a<br>
+          </td>
+          <td rowspan="1" colspan="2" valign="top">c-beginning-of-defun<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-M-e<br>
+          </td>
+          <td valign="top">c-end-of-defun<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-a<br>
+          </td>
+          <td rowspan="2" colspan="1" valign="top">-of-statement<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-b<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-u<br>
+          </td>
+          <td valign="top">up-conditional<br>
+          </td>
+          <td valign="top">move back to containing<strong> </strong><em>preprocessor</em>
+            conditional, does not stop at <code>#else</code><strong></strong><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-p<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+          <td rowspan="2" colspan="1" valign="top">move across
+            preprocessor conditional<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-n<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-q<br>
+          </td>
+          <td valign="top">c-fill-paragraph<br>
+          </td>
+          <td valign="top">(alike to fill-paragraph) multiline string
+            literals, block and line comments<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">M-j<br>
+          </td>
+          <td rowspan="1" colspan="2" valign="top">c-indent-new-comment-line<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-k<br>
+          </td>
+          <td rowspan="1" colspan="2" valign="top">toggle-comment-style<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-l<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">electric. When →off, also supresses
+            auto-newline<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-a<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">auto-newline. When →on, also enables
+            electric.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c .<br>
+          </td>
+          <td valign="top">c-set-style<br>
+          </td>
+          <td valign="top">(use Tab)<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c :<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">inserting colon for C++<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-\<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">backslash (EOL escape) region<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">C-c C-e<br>
+          </td>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">use preprocessor to expand macros in region<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p><br>
+    </p>
+  </body>
+</html>
