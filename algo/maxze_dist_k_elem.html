@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Place k elements such that minimum distance is maximized</title>
+  </head>
+  <body>
+    <h1>
+      <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    </h1>
+    <h1>Place <var>k</var> elements such that minimum distance is
+      maximized — binary search approach<br>
+    </h1>
+    <h2>explained and implemented declaratively with Common Lisp</h2>
+    <p>We are starting off from the Efficient Solution published here:,
+      basically just reimplementing it.<br>
+      → <a moz-do-not-send="true"
+href="https://www.geeksforgeeks.org/place-k-elements-such-that-minimum-distance-is-maximized/">https://www.geeksforgeeks.org/place-k-elements-such-that-minimum-distance-is-maximized/</a><br>
+      Open it in another tab as there will be references made to it in
+      the below text.<br>
+    </p>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <blockquote>
+      <p><em>Given an array representing <var>n</var> positions along a
+          straight line. Find <var>k</var> (where <var>k</var> ≤ <var>n</var>)
+          elements from the array such that the minimum distance between
+          any two (consecutive points among the <var>k</var> points) is
+          maximized.<br>
+        </em></p>
+    </blockquote>
+    <p>For a reason that maybe the original may need to explain, we
+      process the input sorted and such will be exhibited in below
+      examples. The original has its implementations start with a call
+      to a sorting subroutine.<br>
+    </p>
+    <p>Examples:<br>
+    </p>
+    <dl>
+      <dt>{1, 2, 4, 8, 9}, <var>k</var> = 3</dt>
+      <dd>3 elements: {1, 4, 8}, <br>
+        Resulting in a minimum distance of 3</dd>
+      <dt>{1, 2, 5, 7, 11, 12}, <var>k</var> = 3</dt>
+      <dd>3 elements: {1, 7, 12}, <br>
+        resulting in a minimum distance of 5 (between 7 and 12)</dd>
+    </dl>
+    <h3>isFeasible</h3>
+    <p>Consider the isFeasible function from the GeeksForGeeks' Radhav
+      Jajodia's original. It is not too clear immediately to most and
+      requires a different approach to explaining it than the original.<br>
+    </p>
+    <p>It accepts arguments: </p>
+    <ul>
+      <li>the desired minimum distance called "<var>mid</var>", </li>
+      <li>the desired number of elements "<var>k</var>", </li>
+      <li>and the array (with its length).</li>
+    </ul>
+    <p>Going through the sorted numbers from start to end, it counts
+      (starting with the first one) the ones that are at least <var>mid</var>
+      distance away from the previously counted one. When the count
+      reaches <var>k</var>, it returns true. If it never does, it
+      returns false.<br>
+    </p>
+    <p>Going through the sorted numbers from start to end, it counts
+      them omitting the ones that were within &lt;<var>mid</var>
+      distance from the previously counted one (less than <var>mid</var>
+      <sub>units away</sub> from it). When the count reaches <var>k</var>,
+      it returns true. If it never does, it returns false.<br>
+    </p>
+    <h3>The binary search</h3>
+    <p> </p>
+    <p>The function is utilized by the main algorithm in the following
+      manner: a binary search over possible minimum distances is
+      performed, with the boundaries being: 1 (lower boundary) and the
+      upper boundary being… the value of the greatest number.<br>
+    </p>
+    <p>I believe that is incorrect as suboptimal and the correct upper
+      boundary should be at most the distance (i.e. difference) before
+      the least and the greatest element. We could also further narrow
+      that down to maybe that distance divided by <var>k</var>, for an
+      arithmetic average.<br>
+    </p>
+    <p>The original is explaining why is the lower boundary one:<br>
+    </p>
+    <blockquote>
+      <p><em>left is initialized with 1 and not with arr[0] because,
+          minimum distance between each element can be one and not
+          arr[0]. consider this example:</em><em><br>
+        </em><em> arr[] = {9,12} and you have to place 2 element then
+          left = arr[0] will force the function to look the answer
+          between range arr[0] to arr[n-1], i.e 9 to 12, but the answer
+          is 3 so It is required that you initialize the left with 1.</em></p>
+    </blockquote>
+    <p> Each check of the binary search is made at the integer
+      arithmetic average (assigned to <var>mid</var>) of the current
+      set lower and upper boundaries (i.e. integer division-by-two of
+      the sum of them two, which means <u><em>floor</em></u>ed <sup>in
+        case of positive numbers</sup>), starting with the
+      aforementioned initial ones. A check is a call to isFeasible — <br>
+    </p>
+    <ul>
+      <li>if it returns true, the lower boundary is raised to <var>mid+1</var>,
+        i.e. to the plus one of the integer arithmetic average of the
+        former boundaries, resulting with the next <var>mid</var>
+        average being greater<br>
+      </li>
+      <li>if it returns false, the upper boundary is lowered to <var>mid</var>,
+        i.e. to the integer arithmetic average of the former boundaries,
+        resulting with the next <var>mid</var> average being lesser</li>
+    </ul>
+    <p>The checks stop when the boundaries will become equal or nonsense
+      (lower greater than the upper), and the last <var>mid</var> that
+      isFeasible returned true for is returned.<br>
+    </p>
+    <h4>Indulging in clarifying the final loop iteration of the binary
+      search<br>
+    </h4>
+    <p>Let's consider the check previous to the end condition being
+      reached. In case of {1 2 3 4}, we get the average 2 and we can get
+      either a 2+1=3 and a {3 4}, or a 2 and a {1 2}. With {1 2 3 4 5},
+      we get 3 and thus either 3+1=4 and {4 5} or 3 and {1 2 3}. From
+      our acquaintance with the properties of arithmetic average we know
+      that these ranges can be transposed by any positive offset for
+      these findings of ours to hold true. It becomes apparent that it
+      must be either {1 2 3} or {1 2}.<br>
+    </p>
+    <ul>
+      <li>With {1 2 3} we get 2 and thus either 2+1=3 and [3,3], or 2
+        and {1 2}.<br>
+      </li>
+      <li>With {1 2} we get 1 and thus either 1+1=2 and [2,2], or 1 and
+        [1,1].</li>
+    </ul>
+    <p>We thus found that the boundaries, if we didn't err, never become
+      nonsense, and the loop end condition could be (albeit less safely
+      for the case we now erred) considered to be equality.<br>
+    </p>
+    <h3>A declarative approach to isFeasible</h3>
+    <p>Let's have a function that returns an array of all the distances
+      between elements, in order.<br>
+    </p>
+    <table cellpadding="2" width="100%" border="1" cellspacing="2">
+      <tbody>
+        <tr>
+          <td valign="top">
+            <pre>(defun just-distances (arr)
+  (if (null (cdr arr)) nil
+      (cons (- (cadr arr) (car arr))
+            (just-distances (cdr arr)))))
+</pre>
+          </td>
+          <td valign="top">
+            <pre>CL-USER&gt; (just-distances '(1 2 5 7 11 12))<br>(1 3 2 4 1)<br>CL-USER&gt; (just-distances '(1 2 4 8 9))<br>(1 2 4 1)<br></pre>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>We want to look at the distances that are at least <var>mid</var>.
+      Going over the not-far-enough can be otherwise interpreted as
+      summing distances. Let's write a function that will sum the
+      adjoining distances.<br>
+    </p>
+    <table cellpadding="2" width="100%" border="1" cellspacing="2">
+      <tbody>
+        <tr>
+          <td valign="top">
+            <pre>(defun remove-too-close (mid arr)<br>  (if (null arr) nil<br>      (let ((our (car arr))<br>	    (rest (cdr arr)))<br>	(if (&lt;= mid our)<br>	    (cons our<br>		  (remove-too-close mid rest))<br>	    (if (null rest) nil<br>		(remove-too-close<br>		 mid<br>		 (cons (+ our (car rest))<br>		       (cdr rest))))))))</pre>
+          </td>
+          <td valign="top">
+            <pre>CL-USER&gt; (remove-too-close 1 (just-distances '(1 2 5 7 11 12)))<br>(1 3 2 4 1)<br>CL-USER&gt; (remove-too-close 2 (just-distances '(1 2 5 7 11 12)))<br>(4 2 4)<br>CL-USER&gt; (remove-too-close 3 (just-distances '(1 2 5 7 11 12)))<br>(4 6)<br>CL-USER&gt; (remove-too-close 4 (just-distances '(1 2 5 7 11 12)))<br>(4 6)<br>CL-USER&gt; (remove-too-close 5 (just-distances '(1 2 5 7 11 12)))<br>(6 5)<br>CL-USER&gt; (remove-too-close 6 (just-distances '(1 2 5 7 11 12)))<br>(6)</pre>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>We can see that the number of distances ("edges") is one less
+      than the number of our "nodes". We can thus see that<br>
+    </p>
+    <table cellpadding="2" width="125" border="1" cellspacing="2"
+      align="center" height="204">
+      <tbody>
+        <tr>
+          <th align="right" valign="top">given <var>mid</var><br>
+          </th>
+          <th align="left" valign="top">best <var>k</var><br>
+          </th>
+        </tr>
+        <tr>
+          <td align="right" valign="top">1<br>
+          </td>
+          <td valign="top">6<br>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">2<br>
+          </td>
+          <td valign="top">4<br>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">3<br>
+          </td>
+          <td valign="top">3<br>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">4<br>
+          </td>
+          <td valign="top">3<br>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">5<br>
+          </td>
+          <td valign="top">3<br>
+          </td>
+        </tr>
+        <tr>
+          <td align="right" valign="top">6<br>
+          </td>
+          <td valign="top">2<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The distances could be replaced with a data structure <code>(distance
+
+
+        . (left . right))</code> along with a summing function to
+      replace <code>+</code> : <code>(cons (+ (car <var>a</var>) (car
+        <var>b</var>)) (cons (cadr <var>a</var>) (cddr <var>b</var>)))</code>.
+      But that's more useful for maybe debugging, as it makes the code a
+      bit more bloated and for practical purposes the elements can be
+      recovered by taking the leftmost element and adding the distances
+      to it.<br>
+    </p>
+    <p>The equivalent of the function isFeasible would be taking the
+      result of <var>remove-too-close</var> and see if its length is
+      greater or equal to <var>k-1</var>.<br>
+    </p>
+    <h4>The need for lazy sequences: to get rid of checking and summing
+      beyond <var>k</var> elements</h4>
+    <p>What the above code needlessly does is calculating the distances
+      and summing them beyond when k elements got already found. This is
+      because we used eagerly evaluated lists of Common Lisp. We need to
+      introduce laziness. While Common Lisp seems to have more recent
+      standards introducing language constructs for lazy sequences, the
+      most plain usual way to achieve laziness in sequences in Common
+      Lisp has been having zero-argument lambdas as <abbr title="CDR is
+        the latter part of a dotted pair which constitutes a Lisp list.
+        You may recognize the concept of &quot;tail&quot;,
+        &quot;rest&quot;. Dotted pairs allow for linked lists and other
+        pair-based structures.">CDR</abbr>.<br>
+    </p>
+    <p>So instead of <code>(first . rest)</code> it is now going to be
+      <code>(first . (lambda () rest))</code>.<br>
+    </p>
+    <table cellpadding="2" width="100%" border="1" cellspacing="2">
+      <tbody>
+        <tr>
+          <th align="center" valign="top">before<br>
+          </th>
+          <th align="center" valign="top">after<br>
+          </th>
+        </tr>
+        <tr>
+          <td align="left" valign="top">
+            <pre>(defun just-distances (arr)
+  (if (null (cdr arr)) nil
+<br>      (cons (- (cadr arr)<br>               (car arr))
+            (just-distances<br>             (cdr arr)))))
+</pre>
+          </td>
+          <td align="left" valign="top">
+            <pre>(defun just-distances (arr)<br>  (if (null (cdr arr)) nil<br>      (lambda ()<br>	(cons (- (cadr arr)<br>	&nbsp;        (car arr))<br>	      (just-distances<br>	       (cdr arr))))))</pre>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><br>
+          </td>
+          <td valign="top">
+            <pre>(defun funcall? (x)<br>  (if (null x) nil (funcall x)))</pre>
+          </td>
+        </tr>
+        <tr>
+          <td align="left" valign="top">
+            <pre>(defun remove-too-close (mid arr)<br>  (if (null arr) nil<br>      (let ((our (car arr))<br>	    (rest (cdr arr)))<br>	(if (&lt;= mid our)<br>	    (cons our<br><br>		  (remove-too-close<br>		   mid rest))<br>	    (if (null rest) nil<br>		(remove-too-close<br>		 mid<br>		 (cons<br>		  (+ our (car rest))<br>		  (cdr rest))))))))</pre>
+          </td>
+          <td align="left" valign="top">
+            <pre>(defun remove-too-close (mid arr)<br>  (if (null arr) nil<br>      (let ((our (car arr))<br>	    (rest (cdr arr)))<br>	(if (&lt;= mid our)<br>	    (cons our<br>		  (lambda<br>		   () (remove-too-close<br>		       mid (funcall? rest))))<br>	    (if (null rest) nil<br>		(remove-too-close<br>		 mid<br>		 (let ((rest (funcall rest)))<br>		   (cons (+ our (car rest))<br>			 (cdr rest)))))))))<br><br></pre>
+          </td>
+        </tr>
+        <tr align="center">
+          <td colspan="2" valign="top">
+            <table cellpadding="2" border="1" cellspacing="2">
+              <tbody>
+                <tr>
+                  <td valign="top">
+                    <pre>(defun unlazy (arr)<br>  (cons (car arr)<br>	(if (null (cdr arr)) nil<br>	    (unlazy (funcall (cdr arr))))))</pre>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            A function evaluating the whole such lazy sequence into a
+            regular list<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>The final part: to wrap it all up in neat declaratively-done
+      binary search in Lisp<br>
+    </h3>
+    There is no need to do that for the sake of explaining alone. I want
+    to do that, but maybe not right now… I spent way too much time
+    writing this article and I need to do other stuff rn.<br>
+  </body>
+</html>
