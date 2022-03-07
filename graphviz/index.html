@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width,
+      initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="author" content="Mika Feiler">
+    <title> - wiki1.mikf.pl</title>
+    <meta name="description" content="">
+  </head>
+  <body>
+    <p>
+    </p>
+    <br>
+    <h1>on Graphviz</h1>
+    <p>I'm not too good in graphviz, but the way I can do is starting
+      out my drawings with <tt>dotty</tt>.</p>
+    <p>The dotty user guide can be found at <a moz-do-not-send="true"
+        href="https://www.graphviz.org/pdf/dottyguide.pdf">https://www.graphviz.org/pdf/dottyguide.pdf</a>.
+      See chapter 2.1 of it, that's pretty much all that i've been
+      reading of it so far.<br>
+    </p>
+    <p>Switch layout engines between the likes by "set graph attr" in
+      dotty and "layout=dot" or "layout=neato" or "layout=circo" or
+      "layout=fdp" etc. See "man 7 graphviz" for the list, and for the
+      layout-specific parameters.<br>
+    </p>
+    <p>For basic layouts, you will only need to:<br>
+    </p>
+    <ul>
+      <li>create nodes by left click</li>
+      <li>press <samp>a</samp> over node to set its attribute</li>
+      <ul>
+        <li>type in <samp>label=this is my node\nAnd it's multiline!</samp></li>
+      </ul>
+      <li>press <samp>d</samp> over node or the circle of an edge to
+        delete</li>
+      <li>press <samp>u</samp> to <em>undo</em><br>
+      </li>
+      <li>press <samp>l</samp> to relayout</li>
+      <li>right click on empty graph space for main menu</li>
+      <ul>
+        <li>choose "save graph as" to save your graph<br>
+        </li>
+      </ul>
+      <li>right click on node/edge for its context menu<br>
+      </li>
+    </ul>
+    <p>I'm not sure how to run dotty in a way such so as to the graph
+      having an associated <code><samp>.dot</samp></code> file, but
+      probably placing it as the argument to dotty command. If it
+      doesn't have it associated, "save graph as" nor "load graph" won't
+      create the association seemingly, and thus the "save graph"
+      (without the "as") nor "reload graph" right-click-menu commands
+      will do seemingly nothing.<br>
+    </p>
+  </body>
+</html>
