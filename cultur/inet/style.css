@@ -1,0 +1,6 @@
+body {
+    font-size: 1em;
+    font-size: clamp(0.5vw, 1em, 2.4vw);
+    max-width: 40em;
+    margin: 0 auto;
+}
