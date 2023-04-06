@@ -9,10 +9,47 @@
     <h2>system service with own user</h2>
     <h3>a watcher that makes everything be owned by
       _syncthing:_syncthing</h3>
+    <p>it still will take it a while to take care of new files as kqueue
+      isn't capable of that.<br>
+    </p>
     <p>Get <a moz-do-not-send="true"
         href="https://emcrisostomo.github.io/fswatch/">https://emcrisostomo.github.io/fswatch/</a><br>
-      <br>
     </p>
+    <p>the_syncthing_helper.sh<br>
+    </p>
+    <blockquote>#!/bin/sh<br>
+      (echo $$ &gt; /var/st_daemon.pid &amp;&amp; exec nice fswatch -r
+      --event 16380 -0 $1) |<br>
+      nice xargs -r -n1 -0 chown -R _syncthing:_syncthing<br>
+    </blockquote>
+    <p>/etc/rc.d/st_helper<br>
+    </p>
+    <blockquote>#!/bin/ksh<br>
+      <br>
+      daemon="/etc/the_syncthing_helper.sh"<br>
+      daemon_flags="/var/syncthing/*"<br>
+      daemon_user=root<br>
+      <br>
+      . /etc/rc.d/rc.subr<br>
+      <br>
+      rc_reload=NO<br>
+      <br>
+      rc_bg=YES<br>
+      <br>
+      pexp='.*syncthing_helper.*'<br>
+      <br>
+      rc_check() {<br>
+      &nbsp;&nbsp; &nbsp;test -f /var/st_daemon.pid &amp;&amp;<br>
+      &nbsp;&nbsp; &nbsp;ps -o pid -p "`cat /var/st_daemon.pid`"
+      &gt;/dev/null<br>
+      }<br>
+      <br>
+      rc_stop() {<br>
+      &nbsp;&nbsp; &nbsp;head -1 /var/st_daemon.pid | xargs -r -n1 -J %
+      pkill -P % fswatch<br>
+      }<br>
+      <br>
+      rc_cmd $1</blockquote>
     <h3>a script that makes everything be owned by _syncthing:_syncthing
       periodically (too slow)<br>
     </h3>
