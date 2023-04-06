@@ -13,10 +13,10 @@
   <body>
     <h1>on OpenBSD, specifically</h1>
     <h2>Commands cheatsheet</h2>
-    <table cellspacing="2" cellpadding="2" border="1" width="100%">
+    <table border="1" cellspacing="2" cellpadding="2" width="100%">
       <tbody>
         <tr>
-          <td valign="top" nowrap="nowrap"><tt>sysupgrade -n</tt><br>
+          <td nowrap="nowrap" valign="top"><tt>sysupgrade -n</tt><br>
           </td>
           <td valign="top">not to be confused with <tt>syspatch</tt>,
             upgrade release/snapshot. the <tt>-n</tt> prevents it from
@@ -24,7 +24,7 @@
           </td>
         </tr>
         <tr>
-          <td valign="top" nowrap="nowrap"><tt>pkg_info -Q </tt><tt><var>namequery</var></tt><br>
+          <td nowrap="nowrap" valign="top"><tt>pkg_info -Q </tt><tt><var>namequery</var></tt><br>
           </td>
           <td valign="top">searches the first matching repo for packages
             names matching <var>namequery</var><br>
@@ -32,9 +32,10 @@
         </tr>
       </tbody>
     </table>
-    <p><br>
+    <h2>ksh</h2>
+    <p>yeah there is no !!. Use the fc command. By default it will run <a
+        moz-do-not-send="true" href="../unix/ed.htm">ed</a>.<br>
     </p>
-    <p>
-    </p>
+    <p> </p>
   </body>
 </html>
