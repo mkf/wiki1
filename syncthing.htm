@@ -1,36 +1,72 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Syncthing - wiki1.mikf.pl</title>
   </head>
   <body>
     <h1>Syncthing</h1>
     <h2>system service with own user</h2>
+    <h3>a watcher that makes everything be owned by
+      _syncthing:_syncthing</h3>
+    <p>it still will take it a while to take care of new files as kqueue
+      isn't capable of that.<br>
+    </p>
+    <p>Get <a moz-do-not-send="true"
+        href="https://emcrisostomo.github.io/fswatch/">https://emcrisostomo.github.io/fswatch/</a><br>
+    </p>
+    <p>the_syncthing_helper.sh<br>
+    </p>
+    <blockquote>#!/bin/sh<br>
+      (echo $$ &gt; /var/st_daemon.pid &amp;&amp; exec nice fswatch -r
+      --event 16380 -0 $1) |<br>
+      nice xargs -r -n1 -0 chown -R _syncthing:_syncthing<br>
+    </blockquote>
+    <p>/etc/rc.d/st_helper<br>
+    </p>
+    <blockquote>#!/bin/ksh<br>
+      <br>
+      daemon="/etc/the_syncthing_helper.sh"<br>
+      daemon_flags="/var/syncthing/*"<br>
+      daemon_user=root<br>
+      <br>
+      . /etc/rc.d/rc.subr<br>
+      <br>
+      rc_reload=NO<br>
+      <br>
+      rc_bg=YES<br>
+      <br>
+      pexp='.*syncthing_helper.*'<br>
+      <br>
+      rc_check() {<br>
+      &nbsp;&nbsp; &nbsp;test -f /var/st_daemon.pid &amp;&amp;<br>
+      &nbsp;&nbsp; &nbsp;ps -o pid -p "`cat /var/st_daemon.pid`"
+      &gt;/dev/null<br>
+      }<br>
+      <br>
+      rc_stop() {<br>
+      &nbsp;&nbsp; &nbsp;head -1 /var/st_daemon.pid | xargs -r -n1 -J %
+      pkill -P % fswatch<br>
+      }<br>
+      <br>
+      rc_cmd $1</blockquote>
+    <h3>a script that makes everything be owned by _syncthing:_syncthing
+      periodically (too slow)<br>
+    </h3>
     <p>*/3 * * * * _syncthing -ns /etc/the_syncthing_script.sh<br>
     </p>
-    <blockquote>#!/usr/bin/env bash<br>
+    <blockquote>#!/bin/sh<br>
+      PREOWN='chown '<br>
+      FINALOWN='chown 1000 {}'<br>
       case `id -u` in<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `id -u _syncthing`)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      PREOWN=<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      FINALOWN=<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 | `id -u _syncthing`)<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       ;;<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1000)<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       PREOWN="doas chown 1000"<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      FINALOWN=:<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      ;;<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0)<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      PREOWN=<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      FINALOWN=<br>
+      FINALOWN=true<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       ;;<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *)<br>
@@ -47,7 +83,7 @@
       # chown to us if needed for chmod<br>
       # chmod g+w<br>
       # if directory, chmod ug+x<br>
-      # chown to me if not already<br>
+      # chown to user if not already<br>
       # stderr all failures<br>
       <br>
       ECHO="-exec echo"<br>
@@ -55,24 +91,26 @@
       find /var/syncthing/Biezace \<br>
       -user _syncthing \<br>
       \( \<br>
-      -exec ${PREOWN:=chown }:_syncthing {} \+ -o \<br>
+      -exec ${PREOWN}:_syncthing {} \; -o \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $ECHO 1 {} \; \) \<br>
       \( \<br>
-      -exec chmod g+w {} \+ -o \<br>
+      -exec chmod g+w {} \; -o \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $ECHO 2 {} \; \) \<br>
       \( \(&nbsp;&nbsp; \(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -type d \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      -exec chmod ug+x {} \+ -o \<br>
+      -exec chmod ug+x {} \; -o \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       $ECHO 3 {} \; \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \) \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -or \<br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -exec : \; \<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -exec true \; \<br>
       \) -o \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $ECHO 4 {} \; \) \<br>
       \( \<br>
-      -exec ${FINALOWN:=chown 1000 \{\}} \; -o \<br>
+      -exec $FINALOWN \; -o \<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $ECHO 5 {} \; \) \<br>
-      | ifne -n false&nbsp; # moreutils; so cron -n sends fail email</blockquote>
+      | ifne -n false&nbsp; # moreutils; so cron -n sends fail email<br>
+      <br>
+    </blockquote>
   </body>
 </html>
