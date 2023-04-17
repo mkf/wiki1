@@ -31,6 +31,17 @@
         xrdb -load .Xresources</dt>
       <dd>loads your .Xresources<br>
       </dd>
+      <dt><br>
+      </dt>
     </dl>
+    <pre>Section "InputClass"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Identifier "Keyboard0"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MatchIsKeyboard "on"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option "XkbLayout" "pl"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option "XkbModel" "thinkpad"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Option "XkbOptions" "caps:ctrl_modifier,compose:menu"
+EndSection
+</pre>
+    - /etc/X11/xorg.conf.d/00-keyboard.conf on OpenBSD<br>
   </body>
 </html>
