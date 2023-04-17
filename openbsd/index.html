@@ -13,7 +13,7 @@
   <body>
     <h1>on OpenBSD, specifically</h1>
     <h2>Commands cheatsheet</h2>
-    <table border="1" cellspacing="2" cellpadding="2" width="100%">
+    <table cellspacing="2" cellpadding="2" width="100%" border="1">
       <tbody>
         <tr>
           <td nowrap="nowrap" valign="top"><tt>sysupgrade -n</tt><br>
@@ -37,5 +37,21 @@
         moz-do-not-send="true" href="../unix/ed.htm">ed</a>.<br>
     </p>
     <p> </p>
+    <h2>ifconfig</h2>
+    <p><i>hostname.if</i>(5) are /etc/hostname.[if] files<br>
+    </p>
+    <p>for iwn0, start with several "join (essid) wpakey (psk)", ending
+      with "inet autoconf"<br>
+    </p>
+    <p>for wg0: wgpeer (pub) wgendpoint (host) (port) wgaip (allowed
+      range) wgaip (allowed range) wgpka (persistent keepalive seconds)
+      wgkey (priv) [repeat line for many peers]<br>
+      inet (ipv4)<br>
+      inet6 (ipv6)<br>
+    </p>
+    <p>doas sh /etc/netstart iwn0<br>
+      but it's only ifconfig commands being ran so maybe don't go for
+      that<br>
+    </p>
   </body>
 </html>
