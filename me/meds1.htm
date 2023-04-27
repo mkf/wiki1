@@ -8,16 +8,20 @@
   <body>
     <h3>how is the "meds" iframe on my homepage content cronjob
       implemented</h3>
-    on the homepage (as of 2023-04-27):<br>
-    <code>&lt;div align="center"&gt;&lt;iframe src="/meds" height="50"
-      width="400"&gt;&lt;/iframe&gt;&lt;/div&gt;<br>
-      <br>
-    </code>the script that I run over ssh to update it (as of
-    2023-04-27):<br>
-    <code>#!/bin/sh</code><code><br>
-    </code><code>printf "took her morning meds alright today (%s)\n\n"
-      `date +%A` &gt; ~mika/public_html/meds.txt</code><br>
-    <br>
+    on the homepage (as of 2023-04-27):<code></code><code></code><code><br>
+    </code><code>&lt;table align="center"&gt;&lt;tbody&gt;&lt;tr&gt;</code><code></code><code></code><br>
+    <code>&lt;td&gt;&lt;iframe src="/meds" width="400"
+      height="50"&gt;&lt;/iframe&gt;&lt;/td&gt;&lt;/tr&gt;</code><code></code><code></code><br>
+    <code>&lt;tr&gt;&lt;td align="right"&gt;&lt;small&gt;</code><code></code><code></code><br>
+    <code>&lt;a href="//wiki1.mikf.pl/me/meds1.htm" target="_blank"&gt;</code><code></code><code></code><br>
+    <code>about this thing&lt;/a&gt;</code><code></code><br>
+    <code>&lt;/small&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</code>
+    <p><code></code>the script that I run over ssh to update it (as of
+      2023-04-27):<code><br>
+        #!/bin/sh</code><code></code><br>
+      <code></code><code>printf "took her morning meds alright today
+        (%s)\n\n" `date +%A` &gt; ~mika/public_html/meds.txt</code><br>
+    </p>
     the crontab (as of 2023-04-27):<br>
     <code>55-59/2,0-10/3 23-3 * * * ~mika/takingproc.sh midnight
       ~mika/public_html/meds.txt<br>
