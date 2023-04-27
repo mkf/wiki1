@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>meds cron job impl - wiki1.mikf.pl</title>
+  </head>
+  <body>
+    <h3>how is the "meds" iframe on my homepage content cronjob
+      implemented</h3>
+    on the homepage (as of 2023-04-27):<br>
+    <code>&lt;div align="center"&gt;&lt;iframe src="/meds" height="50"
+      width="400"&gt;&lt;/iframe&gt;&lt;/div&gt;<br>
+      <br>
+    </code>the script that I run over ssh to update it (as of
+    2023-04-27):<br>
+    <code>#!/bin/sh</code><code><br>
+    </code><code>printf "took her morning meds alright today (%s)\n\n"
+      `date +%A` &gt; ~mika/public_html/meds.txt</code><br>
+    <br>
+    the crontab (as of 2023-04-27):<br>
+    <code>55-59/2,0-10/3 23-3 * * * ~mika/takingproc.sh midnight
+      ~mika/public_html/meds.txt<br>
+      */20 4-6 * * * ~mika/takingproc.sh dusk ~mika/public_html/meds.txt<br>
+      */20 7-13 * * * ~mika/takingproc.sh am ~mika/public_html/meds.txt<br>
+      */20 14 * * * ~mika/takingproc.sh final ~mika/public_html/meds.txt<br>
+      */20 15-23 * * * ~mika/takingproc.sh late
+      ~mika/public_html/meds.txt</code><br>
+    <br>
+    the script (as of 2023-04-27):<br>
+    <code>#!/bin/bash<br>
+      case "$1" in<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; midnight) &gt;&amp;2
+      echo midnight<br>
+      sed -i -r -f - "$2" &lt;&lt; END<br>
+      1s/(took her morning meds )today alright(
+      \([A-Z][a-z]+\))/\1yesterday\2 alright/<br>
+      1s/(taken her morning meds )today/\1yesterday/<br>
+      2c<br>
+      END<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dusk) &gt;&amp;2 echo
+      dusk<br>
+      HOUR=`date +%I`<br>
+      alias daw='date +%d'<br>
+      [ `daw -r "$2"` -lt `daw` ] &amp;&amp; exit 1<br>
+      sed -i "2c\needs to take her meds in `expr 8 - $HOUR`-`<br>
+      expr 14 - $HOUR` hours" "$2"<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; am) &gt;&amp;2 echo am<br>
+      HOUR=`date +%I`<br>
+      THE_S=s<br>
+      [ $HOUR = 13 ] &amp;&amp; THE_S=<br>
+      if [[ "`head -1 "$2"`" =~ yesterday ]]<br>
+      then printf "seems to not have taken her meds yet\nand has `<br>
+      expr 14 - $HOUR` hour$THE_S tops to do so\n" &gt; "$2"<br>
+      fi<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; final) &gt;&amp;2 echo
+      final<br>
+      sed -r -i -f - "$2" &lt;&lt; END<br>
+      s/and has [0-9]{1,2} hours? tops to do so/but has last hour to do
+      so late/<br>
+      END<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; late) &gt;&amp;2 echo
+      late<br>
+      sed -i -f - "$2" &lt;&lt; END<br>
+      1s/yet/today/<br>
+      T<br>
+      2c\it is too late now<br>
+      END<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;;<br>
+      *) echo "wrong $1" &gt;&amp;2<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;;<br>
+      esac 2&gt;&amp;1 | sed 'i\'"`date '+%n%d %T: '`" &gt;&gt; "$2.log"</code><br>
+    <code></code>
+  </body>
+</html>
