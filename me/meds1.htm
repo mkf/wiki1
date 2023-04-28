@@ -1,7 +1,6 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>meds cron job impl - wiki1.mikf.pl</title>
   </head>
@@ -31,13 +30,13 @@
       */20 15-23 * * * ~mika/takingproc.sh late
       ~mika/public_html/meds.txt</code><br>
     <br>
-    the script (as of 2023-04-27):<br>
+    the script (as of 2023-04-28):<br>
     <code>#!/bin/bash<br>
       case "$1" in<br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; midnight) &gt;&amp;2
       echo midnight<br>
       sed -i -r -f - "$2" &lt;&lt; END<br>
-      1s/(took her morning meds )today alright(
+      1s/(took her morning meds )alright today(
       \([A-Z][a-z]+\))/\1yesterday\2 alright/<br>
       1s/(taken her morning meds )today/\1yesterday/<br>
       2c<br>
@@ -46,6 +45,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dusk) &gt;&amp;2 echo
       dusk<br>
       HOUR=`date +%I`<br>
+      shopt -s expand_aliases<br>
       alias daw='date +%d'<br>
       [ `daw -r "$2"` -lt `daw` ] &amp;&amp; exit 1<br>
       sed -i "2c\needs to take her meds in `expr 8 - $HOUR`-`<br>
