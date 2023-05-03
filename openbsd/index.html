@@ -13,10 +13,10 @@
   <body>
     <h1>on OpenBSD, specifically</h1>
     <h2>Commands cheatsheet</h2>
-    <table cellspacing="2" cellpadding="2" width="100%" border="1">
+    <table width="100%" cellspacing="2" cellpadding="2" border="1">
       <tbody>
         <tr>
-          <td nowrap="nowrap" valign="top"><tt>sysupgrade -n</tt><br>
+          <td valign="top" nowrap="nowrap"><tt>sysupgrade -n</tt><br>
           </td>
           <td valign="top">not to be confused with <tt>syspatch</tt>,
             upgrade release/snapshot. the <tt>-n</tt> prevents it from
@@ -24,7 +24,7 @@
           </td>
         </tr>
         <tr>
-          <td nowrap="nowrap" valign="top"><tt>pkg_info -Q </tt><tt><var>namequery</var></tt><br>
+          <td valign="top" nowrap="nowrap"><tt>pkg_info -Q </tt><tt><var>namequery</var></tt><br>
           </td>
           <td valign="top">searches the first matching repo for packages
             names matching <var>namequery<br>
@@ -68,8 +68,43 @@
     <h2>misc</h2>
     <ul>
       <li><a moz-do-not-send="true"
-href="https://dataswamp.org/~solene/2022-04-21-openbsd-71-fan-noise-temperature.html">https://dataswamp.org/~solene/2022-04-21-openbsd-71-fan-noise-temperature.html</a><br>
-      </li>
+href="https://dataswamp.org/~solene/2022-04-21-openbsd-71-fan-noise-temperature.html">https://dataswamp.org/~solene/2022-04-21-openbsd-71-fan-noise-temperature.html</a></li>
+      <li>there's fswatch&nbsp;<a moz-do-not-send="true"
+          href="https://emcrisostomo.github.io/fswatch/">https://emcrisostomo.github.io/fswatch/</a></li>
+      <ul>
+        <li>also this basic `entr` <a moz-do-not-send="true"
+            href="https://github.com/eradman/entr">https://github.com/eradman/entr</a></li>
+      </ul>
+    </ul>
+    <h3>OpenBSD used to have <em>systrace </em>until 6.0 (5.9)<br>
+    </h3>
+    <p><a moz-do-not-send="true"
+href="https://bsd.slashdot.org/story/02/10/17/2347226/openbsd-gains-privilege-elevation">https://bsd.slashdot.org/story/02/10/17/2347226/openbsd-gains-privilege-elevation</a></p>
+    <p><a moz-do-not-send="true"
+        href="https://www.informit.com/articles/article.aspx?p=363731">https://www.informit.com/articles/article.aspx?p=363731</a></p>
+    <p><a moz-do-not-send="true"
+        href="https://man.openbsd.org/OpenBSD-5.9/systrace">https://man.openbsd.org/OpenBSD-5.9/systrace</a></p>
+    <p><a moz-do-not-send="true"
+        href="https://man.openbsd.org/OpenBSD-4.0/systrace.4">https://man.openbsd.org/OpenBSD-4.0/systrace.4</a></p>
+    <p><a moz-do-not-send="true"
+        href="https://daemonforums.org/showthread.php?t=9795">https://daemonforums.org/showthread.php?t=9795</a>
+      - removed in 6.0</p>
+    <h3>Stuff on rc.d</h3>
+    <p><a moz-do-not-send="true"
+href="https://www.bsdfrog.org/pub/events/openbsd-rcd-AsiaBSDCon2016-paper.pdf">https://www.bsdfrog.org/pub/events/openbsd-rcd-AsiaBSDCon2016-paper.pdf</a></p>
+    <p><a moz-do-not-send="true"
+        href="https://www.bsdfrog.org/pub/events/openbsd-rcd-AsiaBSDCon2016.pdf">https://www.bsdfrog.org/pub/events/openbsd-rcd-AsiaBSDCon2016.pdf</a></p>
+    <p><a moz-do-not-send="true"
+href="https://www.oreilly.com/library/view/absolute-openbsd-2nd/9781457172496/packages_and_rc_d_scripts.html">https://www.oreilly.com/library/view/absolute-openbsd-2nd/9781457172496/packages_and_rc_d_scripts.html</a></p>
+    <p><a moz-do-not-send="true"
+        href="https://ircnow.org/kb/doku.php?id=openbsd:rc.d">https://ircnow.org/kb/doku.php?id=openbsd:rc.d</a></p>
+    <p>compare <a moz-do-not-send="true"
+        href="https://docs.freebsd.org/en/articles/rc-scripting/">https://docs.freebsd.org/en/articles/rc-scripting/</a></p>
+    <p><a moz-do-not-send="true"
+href="https://support.hashicorp.com/hc/en-us/articles/360001964767-OpenBSD-rc-Script-Example">https://support.hashicorp.com/hc/en-us/articles/360001964767-OpenBSD-rc-Script-Example</a></p>
+    <p><br>
+    </p>
+    <ul>
     </ul>
     <p> </p>
   </body>
