@@ -21,5 +21,21 @@
           $0 ~ (sta "BEGIN" fin),$0 ~ (sta "END" fin) { print $0
           &gt;&gt; ("folename." file ".pem")}'</code></strike><br>
     </p>
+    <h2>setting up quick listening netcat-like</h2>
+    <p><i>( </i><i><code>openssl req -x509 -newkey rsa:2048 -keyout
+          nc_key.pem -out nc_cert.pem -days 100 -nodes</code></i><i> #
+        just generate key )</i><br>
+      <code>openssl s_server -accept 1234 -key nc_key.pem -cert
+        nc_cert.pem -quiet -naccept +1</code><br>
+      <code>openssl s_server -accept 1234 -quiet -naccept +1</code> #
+      will want a <code>server.pem</code> in working directory and also
+      cert issue<br>
+      <code>openssl s_server -accept 1234 -nocert -quiet -naccept +1</code>
+      # how do i client anonymous DH though<br>
+    </p>
+    <h3>quick connecting netcat like</h3>
+    <p><code>openssl s_client -connect 192.168.1.180:1234 -quiet
+        -no_ign_eof</code><br>
+    </p>
   </body>
 </html>
