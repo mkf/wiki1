@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>on Slackware - wiki1.mikf.pl</title>
+  </head>
+  <body>
+    <h1>on Slackware</h1>
+    <h2>using SlackBuilds</h2>
+    <h3>SlackBuilds.org</h3>
+    <p><samp>ftp.slackbuilds.org</samp> user:<samp>anonymous</samp>
+      empty password <samp>pub/slackbuilds/15.0/</samp><var>[category]</var>/<br>
+      <em>print readme to stdout (dash as target file):</em> <samp>get
+      </samp><var>[name]</var><samp>/README<strong> -</strong></samp><br>
+      the footer also lists a git repository url<br>
+    </p>
+    <h3>.info files</h3>
+    <p><code>wget -cv "`grep -oP '(?&lt;=DOWNLOAD=")[^="]+'
+        "${PWD##*/}".info`"</code><br>
+    </p>
+    <h3>.SlackBuild</h3>
+    <p>sudo sh "${PWD##*/}".SlackBuild #will do fine, no sbin usage<br>
+      sudo /sbin/installpkg #however. just use su for quick <samp>PATH<br>
+        <br>
+      </samp></p>
+  </body>
+</html>
