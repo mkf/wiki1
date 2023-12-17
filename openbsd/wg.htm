@@ -1,0 +1,13 @@
+<title>wiki1.mikf.pl: wg on openbsd</title>
+<h1>wireguard on openbsd</h1>
+<p>OpenBSD has its hostname.if(5) files. The ones starting with inet declaration
+  <p>A wgpeer's parameters might need to be on the same line as the wgpeer starts.
+    <p>And wgdesc/wgdescr/wgdescription seem to not work. <a href="https://www.mail-archive.com/tech@openbsd.org/msg75081.html">There seems to be some recent mess.</a>
+<p>The manual says to call /etc/netstart with <code>
+      sh /etc/netstart [-n] <var>interface</var>
+    </code>. The <code>-n</code> option prints the shell commands.
+<p>To not have the private key in the file, it is possible to https://www.adrianobarbosa.xyz/blog/openbsd-wireguard.html">use a config file through any other scripting called right from the hostname.if file.</a> Instead of wireguard-tools, just calling ifconfig from such a script is just as well an option.
+<p>Note that the private keys are just random numbers in base64 you can generate with openssl rand. So are the psk which are considered useful as protecting from post-quantum.
+  <p>Follow things by <code>
+      up
+    </code>. Not sure if it's needed, but haven't tried without.
