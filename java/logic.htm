@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>logic in Java - wiki1.mikf.pl</title>
+  </head>
+  <body>
+    <h1>Availability of constraint logic programming paradigm in Java</h1>
+    <p align="right"><em>late August'24</em><br>
+    </p>
+    <p>Wanting to enjoy constraint logic programming paradigm in Java,
+      first find is SWI-Prolog via the JPL7, which is based on JNI and
+      included in the SWI-Prolog distribution. But we can't enjoy
+      anything Logtalk-like (without Logtalk) by just adding Java to our
+      Prolog that way. The API seems to feel very much like openly
+      interfacing with the engine which is a resource.<br>
+    </p>
+    <p>Same vibe can be seen if we go for something like JLog. One that
+      seems to have its Java bindings a bit in the right direction is
+      ECLiPSe (www.eclipseclp.org); its bindings examples may seem like
+      a bunch of old loose files but they had modification dates from
+      last month.<br>
+    </p>
+    <p>But the real thing, a Lombok-vibes library, kinda reminding me of
+      the spirit of Javaslang/Vavr or whatever, I found in<br>
+    </p>
+    <h2>Google Gulava</h2>
+    <p>Gulava, the name derived from their commonplace Guava, resides in
+      an archived GitHub project at github.com/google/gulava .<br>
+    </p>
+    <p>There was no development for some 9 years, but maybe because it
+      is almost perfect and may still have its enjoyers? Anyway, you're
+      not even going to find it on Maven. But it looks soo cool and I
+      soo want to try it out sometime.<br>
+    </p>
+    <p>The README says you need their <em>Bazel</em> to build it. I'd
+      hope for some chances of using it in a similar way as some
+      (there's a talk on that from Devoxx Belgium) use the NetBeans
+      Profiler APIs — by just dragging the dependency-free classes of
+      code into amidst your own.<br>
+    </p>
+    <h2>Where it led me</h2>
+    <p>The search for something that's even <em>packaged as a library</em>
+      has led me to searching Maven Central. Which promptly had me
+      longing for Clojure after a long time without toying with it… I
+      was reminded it had a pretty cool <u><em>core.logic</em></u>.
+      Would be fun to try to use it directly from Java maybe lol<br>
+    </p>
+    <h3>JsonLogic<br>
+    </h3>
+    <p>But a page or two farther, seeing <u><em>pl.allegro</em></u>
+      intrigued me — it was their <em>json-logic-umbrella-framework</em>
+      artifact. I was from there led to the <a moz-do-not-send="true"
+        href="https://github.com/allegro/json-logic-kmp?tab=readme-ov-file">allegro/json-logic-kmp</a>
+      GitHub project for JsonLogicKMP, a Kotlin Multiplatform
+      implementation of JsonLogic.</p>
+    <p>Now JsonLogic, which can be found at jsonlogic.org , may not be
+      what you would wish for Prolog for. Although it seems like with
+      the hashmaps approach it still may be neater than crafting terms
+      almost by hand in strings of Prolog. Saying that might be
+      blasphemous of the first things I've mentioned though, I gotta try
+      out these things someday I guess.<br>
+    </p>
+    <p>I had a thought something else but forgor. Then, had the thought
+      about seeing how much can I have with plain Vavr. Then, had a
+      thought that what if I could use some embedded JPA with views.
+      Anyway, toying with Gulava someday seems to be a must.<br>
+    </p>
+    <hr size="2" width="100%">
+    <div align="right"><em>Mika Feiler — wiki1.mikf.pl</em><br>
+    </div>
+    <p><br>
+    </p>
+  </body>
+</html>
